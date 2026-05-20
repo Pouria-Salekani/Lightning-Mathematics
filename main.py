@@ -16,6 +16,21 @@ def graph_to_screen(x, y):
     return X,Y
 
 
+def jagg(pts , per_x, per_y):
+    new_p = []
+    for i in range(len(pts)-1):
+        pertrub_x = random.uniform(per_x,per_y)
+        pertrub_y = random.uniform(per_x, per_y)
+        x1,y1 = pts[i]
+        x2,y2 = pts[i+1]
+
+        midpt = (((x1+x2)/2) + pertrub_x, ((y1+y2)/2) + pertrub_y)
+
+        new_p.append(pts[i])
+        new_p.append(midpt)
+        new_p.append(pts[i+1])
+    return new_p
+
 run = True
 while run:
     window.fill((0,0,0)) #so everything shows up
@@ -32,20 +47,24 @@ while run:
         points.append((graph_to_screen(x,y)))
     
     
-    jagged_points = []
+    # jagged_pts = []
     
-    #going thru the pts
-    for i in range(len(points)-1):
-        pertrub_x = random.uniform(-5,5)
-        pertrub_y = random.uniform(-5, 5)
-        x1,y1 = points[i]
-        x2,y2 = points[i+1]
+    # #going thru the pts
+    # for i in range(len(points)-1):
+    #     pertrub_x = random.uniform(-5,5)
+    #     pertrub_y = random.uniform(-5, 5)
+    #     x1,y1 = points[i]
+    #     x2,y2 = points[i+1]
 
-        midpt = (((x1+x2)/2) + pertrub_x, ((y1+y2)/2) + pertrub_y)
+    #     midpt = (((x1+x2)/2) + pertrub_x, ((y1+y2)/2) + pertrub_y)
 
-        jagged_points.append(points[i])
-        jagged_points.append(midpt)
-        jagged_points.append(points[i+1])
+    #     jagged_pts.append(points[i])
+    #     jagged_pts.append(midpt)
+    #     jagged_pts.append(points[i+1])
+
+    jagged_pts = jagg(points, -12, 12)
+    jagged_pts = jagg(jagged_pts, -5, 5)
+    jagged_pts = jagg(jagged_pts, -3, 3)
 
 
     # j = 0
@@ -58,7 +77,7 @@ while run:
         
 
 
-    pygame.draw.lines(window, (0,255,255), False, jagged_points, 2)
+    pygame.draw.lines(window, (0,255,255), False, jagged_pts, 2)
 
 
 
