@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 
 pygame.init()
 WIDTH, HEIGHT = 900, 900
@@ -29,9 +30,35 @@ while run:
         y = math.sin(x)
 
         points.append((graph_to_screen(x,y)))
+    
+    
+    jagged_points = []
+    
+    #going thru the pts
+    for i in range(len(points)-1):
+        pertrub_x = random.uniform(-5,5)
+        pertrub_y = random.uniform(-5, 5)
+        x1,y1 = points[i]
+        x2,y2 = points[i+1]
+
+        midpt = (((x1+x2)/2) + pertrub_x, ((y1+y2)/2) + pertrub_y)
+
+        jagged_points.append(points[i])
+        jagged_points.append(midpt)
+        jagged_points.append(points[i+1])
+
+
+    # j = 0
+    # new_p = []
+    # #print(len(mid), len(points))
+    # for i in range(len(points)-1):
+    #     new_p.append(points[i])
+    #     new_p.append(mid[i])
+    #     new_p.append(points[i+1])
         
 
-    pygame.draw.lines(window, (0,255,255), False, points, 2)
+
+    pygame.draw.lines(window, (0,255,255), False, jagged_points, 2)
 
 
 
