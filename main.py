@@ -1,6 +1,7 @@
 import pygame
 import math
 import random
+from sympy import lambdify, sympify, symbols
 
 pygame.init()
 WIDTH, HEIGHT = 900, 900
@@ -107,6 +108,20 @@ def perpen_displacement(pts, per_x, per_y):
 
     return new_p, branch #if is_called else branch
 
+# def f(x):
+#     #return math.sin(x)
+#     x = symbols('x')
+#     equation = 'sin(x)'
+#     expression = sympify(equation)
+#     f = lambdify(x, expression, 'math')
+#     return lambdify(x, expression, 'math')
+
+
+x = symbols('x')
+equation = 'sin(x)'
+expression = sympify(equation)
+f = lambdify(x, expression, 'math')
+
 
 run = True
 while run:
@@ -120,7 +135,7 @@ while run:
     #domain for sin
     for i in range(-600,601):
         x = i / SCALE #this is the domain, we want many domains, domain is [-i / SCALE, i / SCALE]
-        y = math.sin(x)
+        y = f(x)
 
         points.append((graph_to_screen(x,y)))
     
@@ -141,7 +156,7 @@ while run:
     #     jagged_pts.append(points[i+1])
 
     #will get recursively cuz of the infinite while loop
-    jagged_pts, b1 = perpen_displacement(points, -12, 12)
+    jagged_pts, b1 = perpen_displacement(points, -10, 10)
     jagged_pts, b2 = perpen_displacement(jagged_pts, -6, 6)
     jagged_pts, b3 = perpen_displacement(jagged_pts, -3, 3)
     branches = b1 + b2 + b3     #adding them all up because **DON'T** OVERIDE, unlike jagged_pts
