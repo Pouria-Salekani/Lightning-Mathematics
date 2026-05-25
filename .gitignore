@@ -2,3 +2,5 @@
 __pycache__/
 *.pyc
 version1_jagged.py
+version2_jagged.py
+TODO.txt

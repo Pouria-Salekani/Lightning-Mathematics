@@ -8,7 +8,7 @@ from opensimplex import OpenSimplex
 
 pygame.init()
 WIDTH, HEIGHT = 900, 900
-SCALE = 55
+SCALE = 40
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 center = (WIDTH//2, HEIGHT//2)
 # DOMAIN = 
@@ -129,9 +129,13 @@ def perpen_displacement(pts, per_x, per_y, time, noise_l):
 
 
 x = symbols('x')
-equation = 'sin(x)' #will be user inputted
-expression = sympify(equation)
-f = lambdify(x, expression, 'math')
+y = symbols('y')
+equation_x = 'sin(x)' #will be user inputted
+equation_y = 'cos(y)'
+expression_x = sympify(equation_x)
+expression_y = sympify(equation_y)
+f_x = lambdify(x, expression_x, 'math')
+f_y = lambdify(y, expression_y, 'math')
 
 
 run = True
@@ -147,9 +151,12 @@ while run:
     noise_ls = []
 
     #domain for sin
-    for idx, i in enumerate(range(-600,601, 5)):
-        x = i / SCALE #this is the domain, we want many domains, domain is [-i / SCALE, i / SCALE]
-        y = f(x)
+    for idx, i in enumerate(range(-600, 601, 5)):
+        # x = i / SCALE #this is the domain, we want many domains, domain is [-i / SCALE, i / SCALE]
+        # y = f(x)
+        t = i / SCALE
+        x = 3*math.sin(3*t)#t*f_x(t)            #SPIRAL RANGE[0,900] and 55 as scale
+        y = 3*math.sin(4*t) #t*f_y(t)
 
         points.append((graph_to_screen(x,y)))
         #noise_ls.append(noise.noise2(idx * 0.005, time) * 20)
