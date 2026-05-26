@@ -154,14 +154,15 @@ while run:
     for idx, i in enumerate(range(0,1500, 5)):
         # x = i / SCALE #this is the domain, we want many domains, domain is [-i / SCALE, i / SCALE]
         # y = f(x)
-        # t = i / 200
-        # x = math.sin(5*t)#t*f_x(t)            #SPIRAL RANGE[0,900] and 55 as scale --- Polar is the same but [0,1500]
-        # y = 3*math.sin(4*t) #t*f_y(t)
+        t = i / 200
+        x = math.sin(5*t)#t*f_x(t)            #SPIRAL RANGE[0,900] and 55 as scale --- Polar is the same but [0,1500]
+        y = 3*math.sin(4*t) #t*f_y(t)
 
-        t = i / 100
-        r = 0.1*t
-        x = 5*r * math.cos(t)
-        y = 5*r * math.sin(t)
+        #THIS IS POLAR
+        # t = i / 100
+        # r = 0.1*t
+        # x = 5*r * math.cos(t)
+        # y = 5*r * math.sin(t)
 
 
         points.append((graph_to_screen(x,y)))
