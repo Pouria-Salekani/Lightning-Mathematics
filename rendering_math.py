@@ -33,9 +33,6 @@ def branch_displacement(pts, per_x, per_y):
     return new_p
 
 
-#TODO: make a midpoint func
-
-
 # simplex noise displacement, the smoothing function
 #TODO: change name and clear variables
 def perpen_displacement(pts, per_x, per_y, time):

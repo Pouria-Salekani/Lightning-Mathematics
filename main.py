@@ -3,7 +3,7 @@ import math
 import random
 from sympy import lambdify, sympify, symbols
 from opensimplex import OpenSimplex
-
+from colors import WHITE, CYAN, BLACK, DARK_BLUE, PURPLE, BLUE
 
 
 pygame.init()
@@ -155,7 +155,7 @@ while run:
         # x = i / SCALE #this is the domain, we want many domains, domain is [-i / SCALE, i / SCALE]
         # y = f(x)
         t = i / 200
-        x = math.sin(5*t)#t*f_x(t)            #SPIRAL RANGE[0,900] and 55 as scale --- Polar is the same but [0,1500]
+        x = 3*math.sin(5*t)#t*f_x(t)            #SPIRAL RANGE[0,900] and 55 as scale --- Polar is the same but [0,1500]
         y = 3*math.sin(4*t) #t*f_y(t)
 
         #THIS IS POLAR
@@ -204,17 +204,7 @@ while run:
     #     new_p.append(mid[i])
     #     new_p.append(points[i+1])
         
-    WHITE = (255,255,255)
 
-    CYAN = (0,255,255)
-
-    BLUE = (0,100,255)
-
-    DARK_BLUE = (0,30,120)
-
-    PURPLE = (180,0,255)
-
-    BLACK = (0,0,0)
 
     #thicker/fuller colors first
     pygame.draw.lines(window, BLACK, False, jagged_pts, 12)
