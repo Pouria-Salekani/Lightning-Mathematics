@@ -155,8 +155,8 @@ while run:
         # x = i / SCALE #this is the domain, we want many domains, domain is [-i / SCALE, i / SCALE]
         # y = f(x)
         t = i / 200
-        x = 3*math.sin(5*t)#t*f_x(t)            #SPIRAL RANGE[0,900] and 55 as scale --- Polar is the same but [0,1500]
-        y = 3*math.sin(4*t) #t*f_y(t)
+        x = 3*math.sin(t)#t*f_x(t)            #SPIRAL RANGE[0,900] and 55 as scale --- Polar is the same but [0,1500]
+        y = 3*math.cos(t) #t*f_y(t)
 
         #THIS IS POLAR
         # t = i / 100
