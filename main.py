@@ -4,7 +4,7 @@ import random
 from sympy import lambdify, sympify, symbols
 from opensimplex import OpenSimplex
 from colors import WHITE, CYAN, BLACK, DARK_BLUE, PURPLE, BLUE
-
+import modes
 
 pygame.init()
 WIDTH, HEIGHT = 900, 900
@@ -128,13 +128,13 @@ def perpen_displacement(pts, per_x, per_y, time, noise_l):
 #     return lambdify(x, expression, 'math')
 
 
-x = symbols('x')
+x_sym = symbols('x')
 y = symbols('y')
 equation_x = 'sin(x)' #will be user inputted
 equation_y = 'cos(y)'
 expression_x = sympify(equation_x)
 expression_y = sympify(equation_y)
-f_x = lambdify(x, expression_x, 'math')
+f_x = lambdify(x_sym, expression_x, 'math')
 f_y = lambdify(y, expression_y, 'math')
 
 
@@ -146,26 +146,30 @@ while run:
     
     pygame.draw.line(window, (255,255,255), (0, center[0]), (WIDTH, center[0])) #x-axis
     pygame.draw.line(window, (255,255,255), (center[0], 0), (center[0], HEIGHT))  #y-axis
-    points = []
+    #points = []
     branches = []
     noise_ls = []
 
     #domain for sin
-    for idx, i in enumerate(range(-600,600, 5)):
-        x = i / SCALE #this is the domain, we want many domains, domain is [-i / SCALE, i / SCALE]
-        y = f_x(x)
-        # t = i / 200
-        # x = 3*math.sin(t)#t*f_x(t)            #SPIRAL RANGE[0,900] and 55 as scale --- Polar is the same but [0,1500]
-        # y = 3*math.cos(t) #t*f_y(t)
+    # for idx, i in enumerate(range(-600,600, 5)):
+    #     x = i / SCALE #this is the domain, we want many domains, domain is [-i / SCALE, i / SCALE]
+    #     y = f_x(x)
+    #     # t = i / 200
+    #     # x = 3*math.sin(t)#t*f_x(t)            #SPIRAL RANGE[0,900] and 55 as scale --- Polar is the same but [0,1500]
+    #     # y = 3*math.cos(t) #t*f_y(t)
 
-        #THIS IS POLAR
-        # t = i / 100
-        # r = 0.1*t
-        # x = 5*r * math.cos(t)
-        # y = 5*r * math.sin(t)
+    #     #THIS IS POLAR
+    #     # t = i / 100
+    #     # r = 0.1*t
+    #     # x = 5*r * math.cos(t)
+    #     # y = 5*r * math.sin(t)
+
+    points = modes.generate_single(lambdify(x_sym, sympify('sin(x)'), 'math'))
+    #fixed bug! had to do with the symbols being all wrong 
+
+    #     points.append((graph_to_screen(x,y)))
 
 
-        points.append((graph_to_screen(x,y)))
         #noise_ls.append(noise.noise2(idx * 0.005, time) * 20)
     
     

@@ -38,18 +38,20 @@ def user_input(m_variable):
         expr2 = expressions[1].strip()
         f_x = lambdify(t, sympify(expr1), 'math')
         f_y = lambdify(t, sympify(expr2), 'math')
+        generate_parametric(f_x, f_y)
 
     elif m_variable == {x}:
         mode = 'single'
         equation = m_variable #so, sin(x), cos(x), x^2, etc...
         f = lambdify(x, sympify(equation), 'math')
-        #generate_single()
+        generate_single(f)
 
     elif m_variable == {theta}:
         #print('CHECK and --> ', user_expr, lambdify(theta, user_expr, 'math'), type(user_expr))
         mode = 'polar'
         equation = None #like sin(5*theta)
         f = lambdify(theta, sympify(equation), 'math')
+        generate_polar(f)
 
     elif m_variable == {t}:
         mode = 'error'
@@ -63,7 +65,7 @@ def user_input(m_variable):
 
 
 
-user_input(m_variable)
+#user_input(m_variable)
 
 
 def generate_single(f):
