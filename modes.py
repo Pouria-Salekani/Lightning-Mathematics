@@ -3,7 +3,7 @@ from config import center, SCALE
 from math import sin, cos
 
 x = symbols('x')
-theta = symbols('theta')
+theta_ = symbols('theta')
 t = symbols('t') # parametric
 
 user_expr = sympify('cos(theta)')
@@ -32,32 +32,29 @@ f_y = lambdify(y, expression_y, 'math')
 
 #TODO: bunch everything up in a function and eventually call the renderer below for the respective mode
 def user_input(m_variable): 
-    if ',' in user_expr:    #parametric
-        expressions = user_expr.split(',')
+    if ',' in m_variable:    #parametric
+        expressions = m_variable.split(',')
         expr1 = expressions[0].strip() 
         expr2 = expressions[1].strip()
         f_x = lambdify(t, sympify(expr1), 'math')
         f_y = lambdify(t, sympify(expr2), 'math')
-        generate_parametric(f_x, f_y)
+        return generate_parametric(f_x, f_y)
+    
+    user_expr = sympify(m_variable)
+    inpt = user_expr.free_symbols
 
-    elif m_variable == {x}:
-        mode = 'single'
-        equation = m_variable #so, sin(x), cos(x), x^2, etc...
-        f = lambdify(x, sympify(equation), 'math')
-        generate_single(f)
+    if inpt == {x}:
+        equation = user_expr #so, sin(x), cos(x), x^2, etc...
+        f = lambdify(x, equation, 'math')
+        return generate_single(f)
 
-    elif m_variable == {theta}:
+    elif inpt == {theta_}:
         #print('CHECK and --> ', user_expr, lambdify(theta, user_expr, 'math'), type(user_expr))
-        mode = 'polar'
-        equation = None #like sin(5*theta)
-        f = lambdify(theta, sympify(equation), 'math')
-        generate_polar(f)
+        equation = user_expr #like sin(5*theta)
+        f = lambdify(theta_, equation, 'math')
+        return generate_polar(f)
 
-    elif m_variable == {t}:
-        mode = 'error'
-
-
-    return mode
+    raise ValueError('This expression is not supported, please see the instructions.')
 
     #TODO: parametric
     #if [0] == ( and [-1] == )
@@ -81,10 +78,10 @@ def generate_single(f):
 def generate_polar(f):
     points = []
     for i in range(0, 2000, 10):
-        theta_ = i / 100 #TODO: change scaling later
-        r = f(theta_)
-        x = r * cos(theta_)
-        y = r * sin(theta_)
+        theta = i / 100 #TODO: change scaling later
+        r = f(theta)
+        x = 5 * r * cos(theta)
+        y = 5 * r * sin(theta)
 
         points.append((graph_to_screen(x,y)))
 
@@ -94,8 +91,8 @@ def generate_parametric(f_x, f_y):
     points = []
     for i in range(0, 1500, 5):
         t = i / 100 #TODO: change scaling later
-        x = f_x(t)
-        y = f_y(t)
+        x = 3 * f_x(t)
+        y = 3 * f_y(t)
 
         points.append((graph_to_screen(x,y)))
 
