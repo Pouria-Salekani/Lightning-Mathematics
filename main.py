@@ -144,6 +144,8 @@ state = 'user'
 text_box = ''
 user_input = None
 error_text = ''
+save_image = False
+counter = 1
 
 while run:
     window.fill((0,0,0))
@@ -176,6 +178,9 @@ while run:
         elif state == 'draw' and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 state = 'user'
+            elif event.key == pygame.K_s and (event.mod & pygame.KMOD_SHIFT):
+                print('test')
+                save_image = True
 
 
     
@@ -189,17 +194,30 @@ while run:
 
             if error_text != '':
                 font = pygame.font.SysFont(None, 30)
-                dwd = font.render(error_text, True, (255,250,250))
-                window.blit(dwd, (100,250))
+                instruction = font.render(error_text, True, (255,250,250))
+                window.blit(instruction, (100,250))
 
 
     elif state == 'instructions':
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             error_text = ''
             state = 'user'
-        font = pygame.font.SysFont(None, 100)
-        dwd = font.render('HIII', True, (255,250,250))
-        window.blit(dwd, (100,250))
+        font = pygame.font.SysFont(None, 30)
+        text = ['Example functions below are supported (these are just examples, more are supported): ',
+                'Single: sin(x), cos(x), x**2, x**3, exp(x), x**2 + sin(2x), etc...',
+                'Polar: sin(3*theta) + cos(2*theta), cos(-theta), 0.2*theta, etc...',
+                'Parametric (two expressions WITH comma included): cos(t), sin(t); t+2, t**2; etc...',
+                '\n',
+                '\n',
+                '\n',
+                'The parametric REQUIRES a comma to separate two expressions. \n',
+                ]
+
+        y = 50
+        for i in text:
+            surface = font.render(i, True, WHITE)
+            window.blit(surface, (30, y))
+            y += 40
 
 
     elif state == 'draw':
@@ -208,6 +226,8 @@ while run:
         #     if event.type == pygame.K_ESCAPE:
         #         state = 'user'
          #so everything shows up
+        #if event.type == pygame.KEYDOWN and \
+        
         time += 0.09
         
         pygame.draw.line(window, (255,255,255), (0, center[0]), (WIDTH, center[0])) #x-axis
@@ -298,6 +318,11 @@ while run:
 
 
     pygame.display.update()
+
+    if save_image:
+        pygame.image.save(window, f'cool_lightning{counter}.png')
+        counter += 1
+        save_image = False
 
     
     
