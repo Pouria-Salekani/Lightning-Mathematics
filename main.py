@@ -192,6 +192,19 @@ while run:
             text_surface = font.render(text_box, True, (255,255,255))
             window.blit(text_surface, (50,100))
 
+
+
+            text = ['To change the colors, press "C"',
+                    'To make lines thicker, press UP ARROW. To make them thinner, DOWN ARROW', 
+                    'To take a screenshot, press SHIFT + S when the graph appears']
+            screenshot_font = pygame.font.SysFont(None, 33)
+            y = 550
+            for i in text:
+                surface = screenshot_font.render(i, True, WHITE)
+                window.blit(surface, (50, y))
+                y += 40
+           
+
             if error_text != '':
                 font = pygame.font.SysFont(None, 30)
                 instruction = font.render(error_text, True, (255,250,250))
@@ -210,7 +223,8 @@ while run:
                 '\n',
                 '\n',
                 '\n',
-                'The parametric REQUIRES a comma to separate two expressions. \n',
+                'The parametric REQUIRES a comma to separate two expressions.',
+                'Press ESC to go back.'
                 ]
 
         y = 50

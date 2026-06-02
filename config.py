@@ -2,3 +2,5 @@ WIDTH, HEIGHT = 900, 900
 SCALE = 40
 center = (WIDTH//2, HEIGHT//2)
 BRANCHING_PROBABILITY = 0.40
+
+#TODO: add thickness thresholds 
