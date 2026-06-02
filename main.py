@@ -141,18 +141,47 @@ f_y = lambdify(y, expression_y, 'math')
 run = True
 time = 0
 state = 'user'
+text_box = ''
+user_input = None
+
 while run:
+    window.fill((0,0,0))
+
+    #this listens for key inputs, nothing else should be here
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        
+        if state == 'user' and event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE: #delete by 1
+                text_box = text_box[:-1]
+            elif event.key == pygame.K_RETURN:
+                user_input = text_box
+                text_box = ''
+                state = 'draw'
+            else:   #writing
+                text_box += event.unicode
 
+        elif state == 'draw' and event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                state = 'user'
+
+
+    
     if state == 'user':
-        x = [] 
+            font = pygame.font.SysFont(None, 50)
+            introduction_text = font.render('Enter equation:', True, (255,255,255))
+            window.blit(introduction_text, (50,50))
 
+            text_surface = font.render(text_box, True, (255,255,255))
+            window.blit(text_surface, (50,100))
 
     elif state == 'draw':
-        
-        window.fill((0,0,0)) #so everything shows up
+        #so the user can go back and re-type
+        if event.type == pygame.KEYDOWN:
+            if event.type == pygame.K_ESCAPE:
+                state = 'user'
+         #so everything shows up
         time += 0.09
         
         pygame.draw.line(window, (255,255,255), (0, center[0]), (WIDTH, center[0])) #x-axis
@@ -176,7 +205,8 @@ while run:
         #     # y = 5*r * math.sin(t)
 
         #points = modes.generate_polar(lambdify(symbols('theta'), sympify('0.1*theta'), 'math'))
-        points = modes.user_input('-sin(5*t), cos(t)')
+        #points = modes.user_input('-sin(5*t), cos(t)')
+        points = modes.user_input(user_input)
         #fixed bug! had to do with the symbols being all wrong 
 
         #     points.append((graph_to_screen(x,y)))
@@ -240,7 +270,6 @@ while run:
             pygame.draw.lines(window, DARK_BLUE, False, jagged_branch, 4)
             pygame.draw.lines(window, CYAN, False, jagged_branch, 2)
 
-            
 
     pygame.display.update()
 
