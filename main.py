@@ -143,6 +143,7 @@ time = 0
 state = 'user'
 text_box = ''
 user_input = None
+error_text = ''
 
 while run:
     window.fill((0,0,0))
@@ -156,9 +157,19 @@ while run:
             if event.key == pygame.K_BACKSPACE: #delete by 1
                 text_box = text_box[:-1]
             elif event.key == pygame.K_RETURN:
-                user_input = text_box
+                try:
+                    modes.user_input(text_box)
+                    user_input = text_box
+                    text_box = ''
+                    error_text = ''
+                    state = 'draw'
+                except Exception:
+                    text_box = ''
+                    error_text = 'Invalid input. Please press "?" for ' \
+                    'instructions or enter valid expressions.'
+            elif event.key == pygame.K_SLASH and (event.mod & pygame.KMOD_SHIFT):
                 text_box = ''
-                state = 'draw'
+                state = 'instructions'
             else:   #writing
                 text_box += event.unicode
 
@@ -176,11 +187,26 @@ while run:
             text_surface = font.render(text_box, True, (255,255,255))
             window.blit(text_surface, (50,100))
 
+            if error_text != '':
+                font = pygame.font.SysFont(None, 30)
+                dwd = font.render(error_text, True, (255,250,250))
+                window.blit(dwd, (100,250))
+
+
+    elif state == 'instructions':
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            error_text = ''
+            state = 'user'
+        font = pygame.font.SysFont(None, 100)
+        dwd = font.render('HIII', True, (255,250,250))
+        window.blit(dwd, (100,250))
+
+
     elif state == 'draw':
         #so the user can go back and re-type
-        if event.type == pygame.KEYDOWN:
-            if event.type == pygame.K_ESCAPE:
-                state = 'user'
+        # if event.type == pygame.KEYDOWN:
+        #     if event.type == pygame.K_ESCAPE:
+        #         state = 'user'
          #so everything shows up
         time += 0.09
         

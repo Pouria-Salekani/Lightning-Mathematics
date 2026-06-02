@@ -1,5 +1,6 @@
 from sympy import lambdify, sympify, symbols
 from config import center, SCALE
+import math
 from math import sin, cos
 
 x = symbols('x')
@@ -69,7 +70,10 @@ def generate_single(f):
     points = []
     for i in range(-600,601, 5):
         x = i / SCALE
-        y = f(x)
+        try:
+            y = f(x)
+        except:
+            continue
 
         points.append((graph_to_screen(x,y)))
 
