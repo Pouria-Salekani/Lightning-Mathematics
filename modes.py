@@ -44,18 +44,18 @@ def user_input(m_variable):
     user_expr = sympify(m_variable, locals={'pi':pi})
     inpt = user_expr.free_symbols
 
-    if inpt == {x}:
+    if inpt == {x} or inpt == set():
         equation = user_expr #so, sin(x), cos(x), x^2, etc...
         f = lambdify(x, equation, 'math')
         return generate_single(f)
-
+    
     elif inpt == {theta_}:
         #print('CHECK and --> ', user_expr, lambdify(theta, user_expr, 'math'), type(user_expr))
         equation = user_expr #like sin(5*theta)
         f = lambdify(theta_, equation, 'math')
         return generate_polar(f)
 
-    raise ValueError('This expression is not supported, please see the instructions.')
+    raise ValueError('This expression is not supported, please see the instructions.')      #return points, error_msg
 
     #TODO: parametric
     #if [0] == ( and [-1] == )
@@ -79,13 +79,15 @@ def generate_single(f):
 
     return points
 
+
+#TODO: i need to do something about the scales , how they can change so they dont get overly laggy
 def generate_polar(f):
     points = []
     for i in range(0, 2000, 10):
         theta = i / 100 #TODO: change scaling later
         r = f(theta)
-        x = r * cos(theta)
-        y = r * sin(theta)
+        x = 5 * r * cos(theta)
+        y = 5 * r * sin(theta)
 
         points.append((graph_to_screen(x,y)))
 

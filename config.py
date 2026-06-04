@@ -4,3 +4,5 @@ center = (WIDTH//2, HEIGHT//2)
 BRANCHING_PROBABILITY = 0.40
 
 #TODO: add thickness thresholds 
+MAX_THRESHOLD = 20
+MIN_THRESHOLD = 0

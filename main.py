@@ -6,6 +6,7 @@ from opensimplex import OpenSimplex
 from colors import WHITE, CYAN, BLACK, DARK_BLUE, PURPLE, BLUE
 import colors
 import modes
+import config
 
 pygame.init()
 WIDTH, HEIGHT = 900, 900 #TODO: do something about pi not fitting on the screen
@@ -148,9 +149,11 @@ error_text = ''
 save_image = False
 counter = 1
 color_counter = 0
+thickness = 0
 
 while run:
     window.fill((0,0,0))
+    keys = pygame.key.get_pressed()
 
     #this listens for key inputs, nothing else should be here
     for event in pygame.event.get():
@@ -179,12 +182,14 @@ while run:
 
         elif state == 'draw' and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
+                color_counter = 0
                 state = 'user'
             elif event.key == pygame.K_s and (event.mod & pygame.KMOD_SHIFT):
                 print('test')
                 save_image = True
             elif event.key == pygame.K_z:
                 color_counter = (color_counter+1) % len(colors.COLORS)
+            
 
 
     
@@ -198,7 +203,7 @@ while run:
 
 
 
-            text = ['To change the colors, press "Z"',
+            text = ['To change the colors, press Z',
                     'To make lines thicker, press UP ARROW. To make them thinner, DOWN ARROW', 
                     'To take a screenshot, press SHIFT + S when the graph appears']
             screenshot_font = pygame.font.SysFont(None, 33)
@@ -245,6 +250,10 @@ while run:
         #         state = 'user'
          #so everything shows up
         #if event.type == pygame.KEYDOWN and \
+        if keys[pygame.K_UP]: #pygame.K_UP:
+                thickness = min(config.MAX_THRESHOLD, thickness + 1)
+        if keys[pygame.K_DOWN]:#pygame.K_DOWN:
+            thickness = max(config.MIN_THRESHOLD, thickness - 1)
         
         time += 0.09
         layer1, layer2, layer3 = colors.COLORS[color_counter]
@@ -318,11 +327,11 @@ while run:
 
 
         #thicker/fuller colors first
-        pygame.draw.lines(window, layer1, False, jagged_pts, 12)
+        pygame.draw.lines(window, layer1, False, jagged_pts, 12 + thickness)
 
-        pygame.draw.lines(window, layer2, False, jagged_pts, 6)
+        pygame.draw.lines(window, layer2, False, jagged_pts, 6  + thickness)
 
-        pygame.draw.lines(window, layer3, False, jagged_pts, 3)
+        pygame.draw.lines(window, layer3, False, jagged_pts, 3 + thickness)
 
 
         #a loop for branches cuz theyre all diff
