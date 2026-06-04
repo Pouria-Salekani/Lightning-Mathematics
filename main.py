@@ -1,13 +1,14 @@
 import pygame
 import math
 import random
-from sympy import lambdify, sympify, symbols
+from sympy import lambdify, sympify, symbols, pi
 from opensimplex import OpenSimplex
 from colors import WHITE, CYAN, BLACK, DARK_BLUE, PURPLE, BLUE
+import colors
 import modes
 
 pygame.init()
-WIDTH, HEIGHT = 900, 900
+WIDTH, HEIGHT = 900, 900 #TODO: do something about pi not fitting on the screen
 SCALE = 40
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 center = (WIDTH//2, HEIGHT//2)
@@ -146,6 +147,7 @@ user_input = None
 error_text = ''
 save_image = False
 counter = 1
+color_counter = 0
 
 while run:
     window.fill((0,0,0))
@@ -181,6 +183,8 @@ while run:
             elif event.key == pygame.K_s and (event.mod & pygame.KMOD_SHIFT):
                 print('test')
                 save_image = True
+            elif event.key == pygame.K_z:
+                color_counter = (color_counter+1) % len(colors.COLORS)
 
 
     
@@ -194,7 +198,7 @@ while run:
 
 
 
-            text = ['To change the colors, press "C"',
+            text = ['To change the colors, press "Z"',
                     'To make lines thicker, press UP ARROW. To make them thinner, DOWN ARROW', 
                     'To take a screenshot, press SHIFT + S when the graph appears']
             screenshot_font = pygame.font.SysFont(None, 33)
@@ -243,6 +247,7 @@ while run:
         #if event.type == pygame.KEYDOWN and \
         
         time += 0.09
+        layer1, layer2, layer3 = colors.COLORS[color_counter]
         
         pygame.draw.line(window, (255,255,255), (0, center[0]), (WIDTH, center[0])) #x-axis
         pygame.draw.line(window, (255,255,255), (center[0], 0), (center[0], HEIGHT))  #y-axis
@@ -313,11 +318,11 @@ while run:
 
 
         #thicker/fuller colors first
-        pygame.draw.lines(window, BLACK, False, jagged_pts, 12)
+        pygame.draw.lines(window, layer1, False, jagged_pts, 12)
 
-        pygame.draw.lines(window, DARK_BLUE, False, jagged_pts, 6)
+        pygame.draw.lines(window, layer2, False, jagged_pts, 6)
 
-        pygame.draw.lines(window, CYAN, False, jagged_pts, 2)
+        pygame.draw.lines(window, layer3, False, jagged_pts, 3)
 
 
         #a loop for branches cuz theyre all diff
@@ -327,8 +332,9 @@ while run:
             jagged_branch = branch_displacement(jagged_branch, -3, 3)
             # pygame.draw.line(window, DARK_BLUE, x, y, 3)
             # pygame.draw.line(window, CYAN, x, y, 2) #maybe add sliders to the colors' thickness value?
-            pygame.draw.lines(window, DARK_BLUE, False, jagged_branch, 4)
-            pygame.draw.lines(window, CYAN, False, jagged_branch, 2)
+            pygame.draw.lines(window, layer1, False, jagged_branch, 4)
+            pygame.draw.lines(window, layer2, False, jagged_branch, 2)
+            pygame.draw.lines(window, layer3, False, jagged_branch, 1)
 
 
     pygame.display.update()

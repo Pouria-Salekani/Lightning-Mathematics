@@ -1,13 +1,13 @@
-from sympy import lambdify, sympify, symbols
+from sympy import lambdify, sympify, symbols, pi
 from config import center, SCALE
 import math
 from math import sin, cos
 
+
 x = symbols('x')
 theta_ = symbols('theta')
 t = symbols('t') # parametric
-
-user_expr = sympify('cos(theta)')
+user_expr = sympify('pi')
 
 m_variable = user_expr.free_symbols
 print(m_variable)
@@ -41,7 +41,7 @@ def user_input(m_variable):
         f_y = lambdify(t, sympify(expr2), 'math')
         return generate_parametric(f_x, f_y)
     
-    user_expr = sympify(m_variable)
+    user_expr = sympify(m_variable, locals={'pi':pi})
     inpt = user_expr.free_symbols
 
     if inpt == {x}:
@@ -61,7 +61,7 @@ def user_input(m_variable):
     #if [0] == ( and [-1] == )
         #then mode = parametric
 
-
+print(sympify('pi'))
 
 #user_input(m_variable)
 
@@ -84,8 +84,8 @@ def generate_polar(f):
     for i in range(0, 2000, 10):
         theta = i / 100 #TODO: change scaling later
         r = f(theta)
-        x = 5 * r * cos(theta)
-        y = 5 * r * sin(theta)
+        x = r * cos(theta)
+        y = r * sin(theta)
 
         points.append((graph_to_screen(x,y)))
 
