@@ -100,7 +100,7 @@ while run:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             error_text = ''
             state = 'user'
-        font = pygame.font.SysFont(None, 30)
+        font = pygame.font.SysFont(None, 40)
         text = ['Example functions below are supported (these are just examples, more are supported): ',
                 'Single: sin(x), cos(x), x**2, x**3, exp(x), x**2 + sin(2x), etc...',
                 'Polar: sin(3*theta) + cos(2*theta), cos(-theta), 0.2*theta, etc...',

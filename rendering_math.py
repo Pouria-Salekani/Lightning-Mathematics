@@ -1,8 +1,54 @@
 import math
+from math import sin, cos
 import random
 from opensimplex import OpenSimplex
+import config
 
 noise = OpenSimplex(seed=55)
+
+def graph_to_screen(x, y):
+    X = config.center[0] + x*config.SCALE #right
+    Y = config.center[1] - y*config.SCALE #up
+    return X,Y
+
+
+def generate_single(f):
+    points = []
+    for i in range(-600,601, 5):
+        x = i / config.SCALE
+        try:
+            y = f(x)
+        except:
+            continue
+
+        points.append((graph_to_screen(x,y)))
+
+    return points
+
+
+def generate_polar(f):
+    points = []
+    for i in range(0, 2000, 10):
+        theta = i / 100 #TODO: change scaling later
+        r = f(theta)
+        x = 5 * r * cos(theta)
+        y = 5 * r * sin(theta)
+
+        points.append((graph_to_screen(x,y)))
+
+    return points
+
+def generate_parametric(f_x, f_y):
+    points = []
+    for i in range(0, 1500, 5):
+        t = i / 100 #TODO: change scaling later
+        x = 3 * f_x(t)
+        y = 3 * f_y(t)
+
+        points.append((graph_to_screen(x,y)))
+
+    return points
+
 
 
 # follows a random procedure, no simplex noise
