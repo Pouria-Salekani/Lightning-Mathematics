@@ -6,6 +6,8 @@ import rendering_math as render
 
 pygame.init()
 window = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
+pygame.display.set_caption('Lightning Mathematics!')
+
 center = (config.WIDTH//2, config.HEIGHT//2)
 
 
@@ -61,10 +63,9 @@ while run:
                 color_counter = 0
                 state = 'user'
             elif event.key == pygame.K_s and (event.mod & pygame.KMOD_SHIFT):
-                print('test')
                 save_image = True
             elif event.key == pygame.K_z:
-                color_counter = (color_counter+1) % len(colors.COLORS)
+                color_counter = (color_counter+1) % len(colors.COLORS)  #loops back
             
 
 
@@ -76,8 +77,6 @@ while run:
 
             text_surface = font.render(text_box, True, (255,255,255))
             window.blit(text_surface, (50,100))
-
-
 
             text = ['To view instructions, press ?',
                     'To change the colors, press Z',
