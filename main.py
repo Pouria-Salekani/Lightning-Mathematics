@@ -150,6 +150,7 @@ save_image = False
 counter = 1
 color_counter = 0
 thickness = 0
+points = None
 
 while run:
     window.fill((0,0,0))
@@ -164,16 +165,19 @@ while run:
             if event.key == pygame.K_BACKSPACE: #delete by 1
                 text_box = text_box[:-1]
             elif event.key == pygame.K_RETURN:
-                try:
-                    modes.user_input(text_box)
+                points, error = modes.user_input(text_box)
+
+                if error is None:
                     user_input = text_box
                     text_box = ''
                     error_text = ''
                     state = 'draw'
-                except Exception:
+
+                else:
                     text_box = ''
-                    error_text = 'Invalid input. Please press "?" for ' \
-                    'instructions or enter valid expressions.'
+                    # error_text = 'Invalid input. Please press "?" for ' \
+                    # 'instructions or enter valid expressions.'
+                    error_text = error
             elif event.key == pygame.K_SLASH and (event.mod & pygame.KMOD_SHIFT):
                 text_box = ''
                 state = 'instructions'
@@ -203,7 +207,8 @@ while run:
 
 
 
-            text = ['To change the colors, press Z',
+            text = ['To view instructions, press ?',
+                    'To change the colors, press Z',
                     'To make lines thicker, press UP ARROW. To make them thinner, DOWN ARROW', 
                     'To take a screenshot, press SHIFT + S when the graph appears']
             screenshot_font = pygame.font.SysFont(None, 33)
@@ -217,7 +222,7 @@ while run:
             if error_text != '':
                 font = pygame.font.SysFont(None, 30)
                 instruction = font.render(error_text, True, (255,250,250))
-                window.blit(instruction, (100,250))
+                window.blit(instruction, (((WIDTH - instruction.get_width()) // 2), 250)) #center below textbox
 
 
     elif state == 'instructions':
@@ -280,7 +285,9 @@ while run:
 
         #points = modes.generate_polar(lambdify(symbols('theta'), sympify('0.1*theta'), 'math'))
         #points = modes.user_input('-sin(5*t), cos(t)')
-        points = modes.user_input(user_input)
+        #points, _ = modes.user_input(user_input)
+        # if points is None:  #TODO: fix this
+        #     state='user'
         #fixed bug! had to do with the symbols being all wrong 
 
         #     points.append((graph_to_screen(x,y)))
