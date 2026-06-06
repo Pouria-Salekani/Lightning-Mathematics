@@ -1,9 +1,4 @@
 WHITE = (255,255,255)
-CYAN = (0,255,255)
-BLUE = (0,100,255)
-DARK_BLUE = (0,30,120)
-PURPLE = (180,0,255)
-BLACK = (0,0,0)
 
 
 # its very important to note that 0th color is the thickest while 2nd is the thinnest. This will be talked about more in the READ.me
