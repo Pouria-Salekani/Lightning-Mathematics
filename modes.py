@@ -1,5 +1,4 @@
 from sympy import lambdify, sympify, symbols, pi
-from config import center, SCALE
 from math import sin, cos
 import rendering_math as render
 

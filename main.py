@@ -55,6 +55,8 @@ while run:
             elif event.key == pygame.K_SLASH and (event.mod & pygame.KMOD_SHIFT):
                 text_box = ''
                 state = 'instructions'
+            elif event.key == pygame.K_COMMA and (event.mod & pygame.KMOD_SHIFT):
+                text_box += 'exp(sin(theta)) - 2*cos(4*theta) + sin((2*theta-pi)/24)**5'
             else:   #writing
                 text_box += event.unicode
 
@@ -78,10 +80,11 @@ while run:
             text_surface = font.render(text_box, True, (255,255,255))
             window.blit(text_surface, (50,100))
 
-            text = ['To view instructions, press ?',
-                    'To change the colors, press Z',
+            text = ['To view instructions, press "?"',
+                    'To change the colors, press "Z"',
                     'To make lines thicker, press UP ARROW. To make them thinner, DOWN ARROW', 
-                    'To take a screenshot, press SHIFT + S when the graph appears']
+                    'To take a screenshot, press "SHIFT + S" when the graph appears',
+                    'Press "<" then ENTER for a cool graph!']
             screenshot_font = pygame.font.SysFont(None, 33)
             y = 550
             for i in text:

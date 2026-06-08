@@ -31,10 +31,12 @@ def generate_polar(f):
     for i in range(0, 2000, 10):
         theta = i / 100 #TODO: change scaling later
         r = f(theta)
-        x = 5 * r * cos(theta)
-        y = 5 * r * sin(theta)
+        x = 3 * r * cos(theta)
+        y = 3 * r * sin(theta)
 
-        points.append((graph_to_screen(x,y)))
+        x_,y_ = graph_to_screen(x,y)
+        if -100 < x_ < 100 + config.WIDTH and -100 < y_ < 100 + config.HEIGHT:
+            points.append((x_,y_))
 
     return points
 
@@ -80,16 +82,14 @@ def branch_displacement(pts, per_x, per_y):
 
 
 # simplex noise displacement, the smoothing function
-#TODO: change name and clear variables
-def simplex_midpoint_disp(pts, per_x, per_y, time):
+def simplex_midpoint_disp(pts, time):
     new_p = []
     branch = []
-    is_called = False
-    #L = 15
+   
     for i in range(len(pts) - 1):
         s = i / len(pts)    #normalization
         pertrub = noise.noise2(s * 15, time) * 10
-        L = random.uniform(5,20) #need to fix this
+        L = random.uniform(5,20) 
         x1,y1 = pts[i]
         x2,y2 = pts[i+1]
 
@@ -112,7 +112,7 @@ def simplex_midpoint_disp(pts, per_x, per_y, time):
         new_p.append(pts[i+1])
 
         #branching lightning at new_midpot_total
-        if r <= 0.4:
+        if r <= config.BRANCHING_PROBABILITY:
             branch_endpoint = (new_midpt_total[0] + L*norm_vector[0], new_midpt_total[1] + L*norm_vector[1])
             branch.append((new_midpt_total, branch_endpoint)) #the start is at the midpoint, thats where the branch starts
         
