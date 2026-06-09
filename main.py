@@ -139,9 +139,9 @@ while run:
         noise_ls = []
 
         
-        jagged_pts, b1 = render.simplex_midpoint_disp(points, -10, 10, time,)
-        jagged_pts, b2 = render.simplex_midpoint_disp(jagged_pts, -6, 6, time,)
-        jagged_pts, b3 = render.simplex_midpoint_disp(jagged_pts, -3, 3, time)
+        jagged_pts, b1 = render.simplex_midpoint_disp(points, time,)
+        jagged_pts, b2 = render.simplex_midpoint_disp(jagged_pts, time,)
+        jagged_pts, b3 = render.simplex_midpoint_disp(jagged_pts, time)
         branches = b1 + b2 + b3     #adding them all up because **DON'T** OVERIDE, unlike jagged_pts
 
 
