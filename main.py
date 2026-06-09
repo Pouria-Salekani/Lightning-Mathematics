@@ -3,6 +3,7 @@ import colors
 import modes
 import config
 import rendering_math as render
+import encyclopedia
 
 pygame.init()
 window = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
@@ -45,11 +46,13 @@ while run:
             if event.key == pygame.K_BACKSPACE: #delete by 1
                 text_box = text_box[:-1]
             elif event.key == pygame.K_RETURN:
-                points, error = modes.user_input(text_box)
+                points, error, exprs_info = modes.user_input(text_box)
 
+                print('exxress p', exprs_info)
 
                 if error is None:
                     user_input = text_box
+                    encyclopedia.func_info(exprs_info)
                     text_box = ''
                     error_text = ''
                     state = 'draw'

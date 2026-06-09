@@ -11,6 +11,7 @@ user_expr = sympify('pi')
 def user_input(m_variable): 
     res = None
     error = None
+    encyclo = None
     
     if m_variable.strip() == '':    
         return None, 'Invalid syntax.'
@@ -30,8 +31,9 @@ def user_input(m_variable):
         if s_expr1.free_symbols != {t} or s_expr2.free_symbols != {t}:
             return None, 'For parametric, symbols MUST match "t". Please see instructions for examples.'
         
-        f_x = lambdify(t, s_expr1, 'numpy')
-        f_y = lambdify(t, s_expr2, 'numpy')
+        f_x = lambdify(t, s_expr1, 'math')
+        f_y = lambdify(t, s_expr2, 'math')
+        #TODO: do the encyclo here
         return render.generate_parametric(f_x, f_y), None
     
     try:
@@ -53,6 +55,8 @@ def user_input(m_variable):
     elif inpt == {x} or inpt == set():
         equation = user_expr #so, sin(x), cos(x), x^2, etc...
         f = lambdify(x, equation, 'math')
+        print(equation)
+        encyclo = (x, equation) #(symbol, sympify)
         res = render.generate_single(f)
     
     elif inpt == {theta_}:
@@ -60,5 +64,5 @@ def user_input(m_variable):
         f = lambdify(theta_, equation, 'math')
         res = render.generate_polar(f)
 
-    return res, error
+    return res, error, encyclo
 
