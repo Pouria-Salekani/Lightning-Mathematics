@@ -27,6 +27,10 @@ thickness = 0
 
 points = None
 
+jagged_pts = None
+lightning_frame = 0
+branches = []
+
 
 while run:
     window.fill((0,0,0))
@@ -48,6 +52,10 @@ while run:
                     text_box = ''
                     error_text = ''
                     state = 'draw'
+
+                    jagged_pts = None
+                    branches = []
+                    lightning_frame = 0
 
                 else:
                     text_box = ''
@@ -124,6 +132,7 @@ while run:
 
     elif state == 'draw':
         time += 0.09
+        lightning_frame += 1
         
         if keys[pygame.K_UP]: 
                 thickness = min(config.MAX_THRESHOLD, thickness + 1)
@@ -134,32 +143,38 @@ while run:
         
         pygame.draw.line(window, (255,255,255), (0, center[0]), (config.WIDTH, center[0])) #x-axis
         pygame.draw.line(window, (255,255,255), (center[0], 0), (center[0], config.HEIGHT))  #y-axis
-        
-        branches = []
-        noise_ls = []
+    
 
         
-        jagged_pts, b1 = render.simplex_midpoint_disp(points, time,)
-        jagged_pts, b2 = render.simplex_midpoint_disp(jagged_pts, time,)
-        jagged_pts, b3 = render.simplex_midpoint_disp(jagged_pts, time)
-        branches = b1 + b2 + b3     #adding them all up because **DON'T** OVERIDE, unlike jagged_pts
+        if not jagged_pts or lightning_frame >= config.L_REFRESH_RATE:
+            jagged_pts, b1 = render.simplex_midpoint_disp(points, time,)
+            jagged_pts, b2 = render.simplex_midpoint_disp(jagged_pts, time,)
+            jagged_pts, b3 = render.simplex_midpoint_disp(jagged_pts, time)
+            branches = b1 + b2 + b3     #adding them all up because **DON'T** OVERIDE, unlike jagged_pts
 
+            multi_jagged_branches = []
+            for x, y in branches: 
+                pts = [x,y]     #branches is a 3D, so doing this, makes it 2D, like so: [(......), (......)]
+                jagged_branch = render.branch_displacement(pts, -8, 8)
+                jagged_branch = render.branch_displacement(jagged_branch, -3, 3)
+                multi_jagged_branches.append(jagged_branch)
 
         #thicker/fuller colors first
         pygame.draw.lines(window, layer1, False, jagged_pts, 12 + thickness)
-        pygame.draw.lines(window, layer2, False, jagged_pts, 6  + thickness)
+        pygame.draw.lines(window, layer2, False, jagged_pts, 6 + thickness)
         pygame.draw.lines(window, layer3, False, jagged_pts, 3 + thickness)
 
 
         #a loop for branches because they're all diff
-        for x, y in branches: 
-            pts = [x,y]     #branches is a 3D, so doing this, makes it 2D, like so: [(......), (......)]
-            jagged_branch = render.branch_displacement(pts, -8, 8)
-            jagged_branch = render.branch_displacement(jagged_branch, -3, 3)
-         
-            pygame.draw.lines(window, layer1, False, jagged_branch, 4)
-            pygame.draw.lines(window, layer2, False, jagged_branch, 2)
-            pygame.draw.lines(window, layer3, False, jagged_branch, 1)
+        # for x, y in branches: 
+        #     pts = [x,y]     #branches is a 3D, so doing this, makes it 2D, like so: [(......), (......)]
+        #     jagged_branch = render.branch_displacement(pts, -8, 8)
+        #     jagged_branch = render.branch_displacement(jagged_branch, -3, 3)
+        
+        for j in multi_jagged_branches:
+            pygame.draw.lines(window, layer1, False, j, 4)
+            pygame.draw.lines(window, layer2, False, j, 2)
+            pygame.draw.lines(window, layer3, False, j, 1)
 
 
     pygame.display.update()
