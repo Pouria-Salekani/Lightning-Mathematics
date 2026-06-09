@@ -47,6 +47,7 @@ while run:
             elif event.key == pygame.K_RETURN:
                 points, error = modes.user_input(text_box)
 
+
                 if error is None:
                     user_input = text_box
                     text_box = ''
@@ -147,10 +148,11 @@ while run:
 
         
         if not jagged_pts or lightning_frame >= config.L_REFRESH_RATE:
-            jagged_pts, b1 = render.simplex_midpoint_disp(points, time,)
-            jagged_pts, b2 = render.simplex_midpoint_disp(jagged_pts, time,)
+            jagged_pts, b1 = render.simplex_midpoint_disp(points, time)
+            jagged_pts, b2 = render.simplex_midpoint_disp(jagged_pts, time)
             jagged_pts, b3 = render.simplex_midpoint_disp(jagged_pts, time)
             branches = b1 + b2 + b3     #adding them all up because **DON'T** OVERIDE, unlike jagged_pts
+            
 
             multi_jagged_branches = []
             for x, y in branches: 
@@ -158,6 +160,9 @@ while run:
                 jagged_branch = render.branch_displacement(pts, -8, 8)
                 jagged_branch = render.branch_displacement(jagged_branch, -3, 3)
                 multi_jagged_branches.append(jagged_branch)
+
+            lightning_frame = 0 # this is crucial, otherwise, the frames will be laggy
+
 
         #thicker/fuller colors first
         pygame.draw.lines(window, layer1, False, jagged_pts, 12 + thickness)

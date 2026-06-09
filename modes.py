@@ -1,6 +1,7 @@
 from sympy import lambdify, sympify, symbols, pi
 from math import sin, cos
 import rendering_math as render
+import numpy as np
 
 x = symbols('x')
 theta_ = symbols('theta')
@@ -29,8 +30,8 @@ def user_input(m_variable):
         if s_expr1.free_symbols != {t} or s_expr2.free_symbols != {t}:
             return None, 'For parametric, symbols MUST match "t". Please see instructions for examples.'
         
-        f_x = lambdify(t, s_expr1, 'math')
-        f_y = lambdify(t, s_expr2, 'math')
+        f_x = lambdify(t, s_expr1, 'numpy')
+        f_y = lambdify(t, s_expr2, 'numpy')
         return render.generate_parametric(f_x, f_y), None
     
     try:
