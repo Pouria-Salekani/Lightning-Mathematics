@@ -2,6 +2,7 @@ from sympy import lambdify, sympify, symbols, pi
 from math import sin, cos
 import rendering_math as render
 import numpy as np
+import encyclopedia
 
 x = symbols('x')
 theta_ = symbols('theta')
@@ -14,7 +15,7 @@ def user_input(m_variable):
     encyclo = None
     
     if m_variable.strip() == '':    
-        return None, 'Invalid syntax.'
+        return None, 'Invalid syntax.', None
     
     elif ',' in m_variable:    #parametric
         expressions = m_variable.split(',')
@@ -26,20 +27,23 @@ def user_input(m_variable):
             s_expr2 = sympify(expr2)
 
         except:
-            return None, 'Invalid syntax for parametric expression'
+            return None, 'Invalid syntax for parametric expression', None
         
         if s_expr1.free_symbols != {t} or s_expr2.free_symbols != {t}:
-            return None, 'For parametric, symbols MUST match "t". Please see instructions for examples.'
+            return None, 'For parametric, symbols MUST match "t". Please see instructions for examples.', None
         
         f_x = lambdify(t, s_expr1, 'math')
         f_y = lambdify(t, s_expr2, 'math')
-        #TODO: do the encyclo here
-        return render.generate_parametric(f_x, f_y), None
+        
+        encyclo = (t, (expr1, expr2))
+        encyclopedia.test(m_variable)
+
+        return render.generate_parametric(f_x, f_y), None, encyclo
     
     try:
         user_expr = sympify(m_variable, locals={'pi':pi})
     except:
-        return None, 'Invalid, please press "?" for instructions.'
+        return None, 'Invalid, please press "?" for instructions.', None
     
     inpt = user_expr.free_symbols 
 
@@ -55,13 +59,19 @@ def user_input(m_variable):
     elif inpt == {x} or inpt == set():
         equation = user_expr #so, sin(x), cos(x), x^2, etc...
         f = lambdify(x, equation, 'math')
-        print(equation)
+        
         encyclo = (x, equation) #(symbol, sympify)
+        encyclopedia.test(m_variable)
+        
         res = render.generate_single(f)
     
     elif inpt == {theta_}:
         equation = user_expr #like sin(5*theta)
         f = lambdify(theta_, equation, 'math')
+        
+        encyclo = (theta_, equation)
+        encyclopedia.test(m_variable)
+        
         res = render.generate_polar(f)
 
     return res, error, encyclo

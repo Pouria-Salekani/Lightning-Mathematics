@@ -47,12 +47,10 @@ while run:
                 text_box = text_box[:-1]
             elif event.key == pygame.K_RETURN:
                 points, error, exprs_info = modes.user_input(text_box)
-
-                print('exxress p', exprs_info)
-
+                
                 if error is None:
                     user_input = text_box
-                    encyclopedia.func_info(exprs_info)
+                    #encyclopedia.func_info(exprs_info) from modes--->enclcy
                     text_box = ''
                     error_text = ''
                     state = 'draw'
