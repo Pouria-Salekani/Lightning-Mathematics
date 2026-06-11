@@ -12,7 +12,6 @@ user_expr = sympify('pi')
 def user_input(m_variable): 
     res = None
     error = None
-    encyclo = None
     
     if m_variable.strip() == '':    
         return None, 'Invalid syntax.', None
@@ -27,10 +26,10 @@ def user_input(m_variable):
             s_expr2 = sympify(expr2)
 
         except:
-            return None, 'Invalid syntax for parametric expression', None
+            return None, 'Invalid syntax for parametric expression'
         
         if s_expr1.free_symbols != {t} or s_expr2.free_symbols != {t}:
-            return None, 'For parametric, symbols MUST match "t". Please see instructions for examples.', None
+            return None, 'For parametric, symbols MUST match "t". Please see instructions for examples.'
         
         f_x = lambdify(t, s_expr1, 'math')
         f_y = lambdify(t, s_expr2, 'math')
@@ -38,12 +37,12 @@ def user_input(m_variable):
         encyclo = (t, (expr1, expr2))
         encyclopedia.test(m_variable)
 
-        return render.generate_parametric(f_x, f_y), None, encyclo
+        return render.generate_parametric(f_x, f_y), None
     
     try:
         user_expr = sympify(m_variable, locals={'pi':pi})
     except:
-        return None, 'Invalid, please press "?" for instructions.', None
+        return None, 'Invalid, please press "?" for instructions.'
     
     inpt = user_expr.free_symbols 
 
@@ -60,8 +59,8 @@ def user_input(m_variable):
         equation = user_expr #so, sin(x), cos(x), x^2, etc...
         f = lambdify(x, equation, 'math')
         
-        encyclo = (x, equation) #(symbol, sympify)
-        encyclopedia.test(m_variable)
+        #encyclopedia.test(m_variable)
+        encyclopedia.expression_analyzer(x, equation, m_variable)
         
         res = render.generate_single(f)
     
@@ -69,10 +68,9 @@ def user_input(m_variable):
         equation = user_expr #like sin(5*theta)
         f = lambdify(theta_, equation, 'math')
         
-        encyclo = (theta_, equation)
-        encyclopedia.test(m_variable)
+        encyclopedia.expression_analyzer(theta_, equation, m_variable)
         
         res = render.generate_polar(f)
 
-    return res, error, encyclo
+    return res, error
 

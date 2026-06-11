@@ -9,7 +9,7 @@ pygame.init()
 window = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
 pygame.display.set_caption('Lightning Mathematics!')
 
-center = (config.WIDTH//2, config.HEIGHT//2)
+center = (config.WIDTH, config.HEIGHT)
 
 
 run = True
@@ -46,7 +46,7 @@ while run:
             if event.key == pygame.K_BACKSPACE: #delete by 1
                 text_box = text_box[:-1]
             elif event.key == pygame.K_RETURN:
-                points, error, exprs_info = modes.user_input(text_box)
+                points, error = modes.user_input(text_box)
                 
                 if error is None:
                     user_input = text_box
@@ -78,6 +78,9 @@ while run:
                 save_image = True
             elif event.key == pygame.K_z:
                 color_counter = (color_counter+1) % len(colors.COLORS)  #loops back
+            elif event.key == pygame.K_4 and (event.mod & pygame.KMOD_SHIFT):
+                state = 'encyclopedia'
+                #go to encyclopedia page
             
 
 
@@ -109,6 +112,9 @@ while run:
                 window.blit(instruction, (((config.WIDTH - instruction.get_width()) // 2), 250)) #center below textbox
 
 
+    elif state == 'encyclopedia':
+        break
+
     elif state == 'instructions':
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             error_text = ''
@@ -137,15 +143,21 @@ while run:
         lightning_frame += 1
         
         if keys[pygame.K_UP]: 
-                thickness = min(config.MAX_THRESHOLD, thickness + 1)
+            thickness = min(config.MAX_THRESHOLD, thickness + 1)
         if keys[pygame.K_DOWN]:
             thickness = max(config.MIN_THRESHOLD, thickness - 1)
         
         layer1, layer2, layer3 = colors.COLORS[color_counter]
         
-        pygame.draw.line(window, (255,255,255), (0, center[0]), (config.WIDTH, center[0])) #x-axis
-        pygame.draw.line(window, (255,255,255), (center[0], 0), (center[0], config.HEIGHT))  #y-axis
+        #TODO: is not centered, fix
+        pygame.draw.line(window, (255,255,255), (0, config.center[0]), (config.WIDTH, config.center[0])) #x-axis
+        pygame.draw.line(window, (255,255,255), (config.center[0], 0), (config.center[0], config.HEIGHT))  #y-axis
     
+        #encyclopedia page
+        e_font = pygame.font.SysFont(None, 33)
+        instruction = e_font.render('Press "$" for information about the expression', 
+                                  True, (255,250,250))
+        window.blit(instruction, (20,10))
 
         
         if not jagged_pts or lightning_frame >= config.L_REFRESH_RATE:

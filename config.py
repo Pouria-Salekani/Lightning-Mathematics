@@ -1,3 +1,5 @@
+from sympy import symbols
+
 WIDTH, HEIGHT = 1300, 950
 SCALE = 40
 center = (WIDTH//2, HEIGHT//2)
@@ -7,3 +9,6 @@ MIN_THRESHOLD = 0
 
 L_REFRESH_RATE = 2
 
+X = symbols('x')
+THETA = symbols('theta')
+T = symbols('t')

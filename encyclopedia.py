@@ -1,13 +1,16 @@
-from sympy import lambdify, sympify, symbols, diff, S, Interval, Union, sstr
+from sympy import lambdify, sympify, symbols, diff, S, Interval, Union, sin, cos, tan, csc, cot, sec, atan, acos, asin
 from sympy.calculus.util import function_range, continuous_domain
 
 
 import math
+import text_formatter
+import config
 
-x = symbols('x')
-ww = sympify('1/x**2')
-print(ww)
-f = lambdify(x, ww, 'math')
+# x = symbols('x')
+# theta = sympify('theta')
+# t = sympify('t')
+# print(ww)
+# f = lambdify(x, ww, 'math')
 # fix Union(Interval.open(-oo, -2), 
 # Interval.open(-2, 2), Interval.open(2, oo)), 'range': Union(Interval(-oo, -1/4), Interval.open(0, oo)
 #read from user input to determine type
@@ -20,15 +23,23 @@ f = lambdify(x, ww, 'math')
 def test(t):
     print(t)
 
+def find_symbol(symbol):
+    if symbol.free_symbols == {config.X}:
+        return 'x'
+    elif symbol.free_symbols == {config.THETA}:
+        return 'theta'
+    else:
+        return 't'
 
-def expression_analyzer(text): #(symb, expr)
-    symbol, expr = text
-    #INFO = {}
+def expression_analyzer(symbol, expr, user_input): #(symb, expr)
+    string_symbol = find_symbol(symbol) 
+    symb_counter = user_input.count(f'{string_symbol}')
+    print(symb_counter)
 
     if type(expr) == tuple and len(expr) == 2:
         INFO = {
-        'input': None,
-        'type': None,
+        'input': user_input,
+        'type': None,   #TODO: make own classification
         'left_deriv': None,
         'right_deriv': None,
         'roots': None,
@@ -38,14 +49,17 @@ def expression_analyzer(text): #(symb, expr)
         'right_range': None
 
         }
-    else: 
+
+    #TODO: it crashes for large polar functions
+    else:
+       # print(user_input.count('x') >= 2) then skip for trigs
         INFO = {
-        'input': None,
-        'type': None,
-        'derivative': None,
-        'roots': None,
-        'domain': None,
-        'range': None
+        'input': user_input,
+        'type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
+        'derivative': diff(expr, symbol),
+        #'roots': solve(expr, symbol),
+        #'domain':text_formatter.make_pretty_text(continuous_domain(expr, symbol, S.Reals)), 
+        #'range': text_formatter.make_pretty_text(function_range(expr, symbol, S.Reals))
         }
 
     print(INFO)
@@ -77,11 +91,11 @@ INFO_parametric = {
 
 
 
-INFO['input'] = ww
-INFO['derivative'] = diff(ww, x)
-INFO['domain'] = continuous_domain(ww, x, S.Reals)
-g = function_range(ww, x, S.Reals)
-ff = continuous_domain(ww, x, S.Reals)
+# INFO['input'] = ww
+# INFO['derivative'] = diff(ww, x)
+# INFO['domain'] = continuous_domain(ww, x, S.Reals)
+# g = function_range(ww, x, S.Reals)
+# ff = continuous_domain(ww, x, S.Reals)
 
 
 
@@ -93,6 +107,7 @@ def make_som(g):
         pretty_text = f'{left}'+f'{g.start}, {g.end}'+f'{right}'
 
         return pretty_text
+
 
 def what(ff):
     print(ff)
