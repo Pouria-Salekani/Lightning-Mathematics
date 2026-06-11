@@ -1,4 +1,4 @@
-from sympy import lambdify, sympify, symbols, diff, S, Interval, Union, sin, cos, tan, csc, cot, sec, atan, acos, asin
+from sympy import lambdify, sympify, symbols, diff, S, Interval, Union, solve, sin, cos, tan, csc, cot, sec, atan, acos, asin
 from sympy.calculus.util import function_range, continuous_domain
 
 
@@ -32,9 +32,12 @@ def find_symbol(symbol):
         return 't'
 
 def expression_analyzer(symbol, expr, user_input): #(symb, expr)
+    flag = False
     string_symbol = find_symbol(symbol) 
     symb_counter = user_input.count(f'{string_symbol}')
-    print(symb_counter)
+    
+    if symb_counter >= 2:
+        flag = True
 
     if type(expr) == tuple and len(expr) == 2:
         INFO = {
@@ -51,16 +54,29 @@ def expression_analyzer(symbol, expr, user_input): #(symb, expr)
         }
 
     #TODO: it crashes for large polar functions
+    #TODO: fix it when 
     else:
        # print(user_input.count('x') >= 2) then skip for trigs
-        INFO = {
-        'input': user_input,
-        'type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
-        'derivative': diff(expr, symbol),
-        #'roots': solve(expr, symbol),
-        #'domain':text_formatter.make_pretty_text(continuous_domain(expr, symbol, S.Reals)), 
-        #'range': text_formatter.make_pretty_text(function_range(expr, symbol, S.Reals))
-        }
+        try:
+            INFO = {
+            'input': user_input,
+            'type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
+            'derivative': diff(expr, symbol),
+            'roots': [i for i in solve(expr, symbol) if i.is_real] if not flag else 'Cannot compute due to expression complexity',
+            'domain':text_formatter.make_pretty_text(continuous_domain(expr, symbol, S.Reals)) \
+                                if not flag else 'Cannot compute due to expression complexity', 
+            'range': text_formatter.make_pretty_text(function_range(expr, symbol, S.Reals)) \
+                                if not flag else 'Cannot compute due to expression complexity'
+            }
+        except NotImplementedError:
+            INFO = {
+            'input': user_input,
+            'type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
+            'derivative': diff(expr, symbol),
+            'roots': 'Cannot compute due to expression complexity',
+            'domain':'Cannot compute due to expression complexity', 
+            'range': 'Cannot compute due to expression complexity'
+            }
 
     print(INFO)
     return
