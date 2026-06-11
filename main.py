@@ -49,6 +49,7 @@ while run:
                 points, error = modes.user_input(text_box)
                 
                 if error is None:
+                    print(text_box)
                     user_input = text_box
                     #encyclopedia.func_info(exprs_info) from modes--->enclcy
                     text_box = ''
@@ -150,7 +151,7 @@ while run:
         layer1, layer2, layer3 = colors.COLORS[color_counter]
         
         #TODO: is not centered, fix
-        pygame.draw.line(window, (255,255,255), (0, config.center[0]), (config.WIDTH, config.center[0])) #x-axis
+        pygame.draw.line(window, (255,255,255), (0, config.center[1]), (config.WIDTH, config.center[1])) #x-axis
         pygame.draw.line(window, (255,255,255), (config.center[0], 0), (config.center[0], config.HEIGHT))  #y-axis
     
         #encyclopedia page

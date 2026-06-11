@@ -34,6 +34,7 @@ def generate_polar(f):
         x = 3 * r * cos(theta)
         y = 3 * r * sin(theta)
 
+        #TODO: add auto-scaling
         x_,y_ = graph_to_screen(x,y)
         if -100 < x_ < 100 + config.WIDTH and -100 < y_ < 100 + config.HEIGHT:
             points.append((x_,y_))
@@ -42,14 +43,16 @@ def generate_polar(f):
 
 def generate_parametric(f_x, f_y):
     points = []
-    for i in range(0, 1100, 5):
+    ls = []
+    for i in range(1, 1100, 5):
         t = i / 100 #TODO: change scaling later
         x = 3 * f_x(t)
         y = 3 * f_y(t)
 
         points.append((graph_to_screen(x,y)))
+        ls.append((x,y))
 
-    return points
+    return points, ls
 
 # follows a random procedure, no simplex noise
 def branch_displacement(pts, per_x, per_y):

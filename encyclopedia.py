@@ -31,25 +31,45 @@ def find_symbol(symbol):
     else:
         return 't'
 
-def expression_analyzer(symbol, expr, user_input): #(symb, expr)
+def expression_analyzer(symbol, expr, user_input, ls): #(symb, expr)
+    g = [j for i,j in ls]
+    gm = min(g)
+    gmax = max(g)
+    gs = []
+
+    for i in range(len(ls)-1):
+        x1,y1 = ls[i]
+        x2,y2 = ls[i+1]
+
+        if y1*y2 < 0:
+            gs.append((x1+x2)/2)
+
+
+    
+    print(symbol, expr, user_input)
     flag = False
     string_symbol = find_symbol(symbol) 
-    symb_counter = user_input.count(f'{string_symbol}')
+    symb_counter = user_input.count(f'{string_symbol}') #if symbol in {config.}
+    print(symb_counter, string_symbol)
     
     if symb_counter >= 2:
-        flag = True
+        flag = False
 
+    #TODO: also add notimplementederror for here
     if type(expr) == tuple and len(expr) == 2:
         INFO = {
         'input': user_input,
-        'type': None,   #TODO: make own classification
-        'left_deriv': None,
-        'right_deriv': None,
-        'roots': None,
-        'left_domain': None,
-        'right_domain': None,
-        'left_range': None,
-        'right_range': None
+        'type': 'Parametric',   #TODO: make own classification
+        'left_deriv': diff(expr[0]),
+        'right_deriv': diff(expr[1]),
+        #'roots_left': solve(expr[0]),
+        #'roots_right': solve(expr[1]),
+        'roots' : gs,
+        'left_domain': continuous_domain(expr[0], symbol, S.Reals),
+        'right_domain': continuous_domain(expr[1], symbol, S.Reals),
+        # 'left_range': function_range(expr[0], symbol, S.Reals),
+        # 'right_range': function_range(expr[0], symbol, S.Reals)
+        'range': (gm, gmax)
 
         }
 
@@ -62,7 +82,7 @@ def expression_analyzer(symbol, expr, user_input): #(symb, expr)
             'input': user_input,
             'type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
             'derivative': diff(expr, symbol),
-            'roots': [i for i in solve(expr, symbol) if i.is_real] if not flag else 'Cannot compute due to expression complexity',
+            #'roots': [i for i in solve(expr, symbol) if i.is_real] if not flag else 'Cannot compute due to expression complexity',
             'domain':text_formatter.make_pretty_text(continuous_domain(expr, symbol, S.Reals)) \
                                 if not flag else 'Cannot compute due to expression complexity', 
             'range': text_formatter.make_pretty_text(function_range(expr, symbol, S.Reals)) \
