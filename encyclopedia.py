@@ -32,19 +32,29 @@ def find_symbol(symbol):
         return 't'
 
 def expression_analyzer(symbol, expr, user_input, ls): #(symb, expr)
-    g = [j for i,j in ls]
+    g = [j for i,j,q in ls] #range
     gm = min(g)
     gmax = max(g)
     gs = []
+    gt = []
 
+    xva = []
+
+    #roots
     for i in range(len(ls)-1):
-        x1,y1 = ls[i]
-        x2,y2 = ls[i+1]
-
+        x1,y1,t1 = ls[i]
+        x2,y2,t2 = ls[i+1]
+        #FIX THE PROBLEM WITH THE PARAMETRIC ROOTS BEING ALL FUNKYYYYY
+        xva.append(x1)
+        xva.append(x2)
         if y1*y2 < 0:
-            gs.append((x1+x2)/2)
+            gs.append(round((x1+x2)/2,2))
+            gt.append(round((t1+t2)/2, 2))
 
 
+    print(len(gs), gs, '---', list(set(gs)))
+    print(min(xva), max(xva))
+    print(gt, list(set(gt)))
     
     print(symbol, expr, user_input)
     flag = False
