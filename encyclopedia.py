@@ -31,30 +31,13 @@ def find_symbol(symbol):
     else:
         return 't'
 
-def expression_analyzer(symbol, expr, user_input, ls): #(symb, expr)
-    g = [j for i,j,q in ls] #range
-    gm = min(g)
-    gmax = max(g)
-    gs = []
-    gt = []
+def expression_analyzer(symbol, expr, user_input, roots): #(symb, expr)
+    # g = [j for i,j,q,o in roots] #range
+    # gm = min(g)
+    # gmax = max(g)
+    # gs = []
+    # gt = []
 
-    xva = []
-
-    #roots
-    for i in range(len(ls)-1):
-        x1,y1,t1 = ls[i]
-        x2,y2,t2 = ls[i+1]
-        #FIX THE PROBLEM WITH THE PARAMETRIC ROOTS BEING ALL FUNKYYYYY
-        xva.append(x1)
-        xva.append(x2)
-        if y1*y2 < 0:
-            gs.append(round((x1+x2)/2,2))
-            gt.append(round((t1+t2)/2, 2))
-
-
-    print(len(gs), gs, '---', list(set(gs)))
-    print(min(xva), max(xva))
-    print(gt, list(set(gt)))
     
     print(symbol, expr, user_input)
     flag = False
@@ -74,17 +57,16 @@ def expression_analyzer(symbol, expr, user_input, ls): #(symb, expr)
         'right_deriv': diff(expr[1]),
         #'roots_left': solve(expr[0]),
         #'roots_right': solve(expr[1]),
-        'roots' : gs,
+        #'roots' : gs,
+        'roots': roots,
         'left_domain': continuous_domain(expr[0], symbol, S.Reals),
         'right_domain': continuous_domain(expr[1], symbol, S.Reals),
         # 'left_range': function_range(expr[0], symbol, S.Reals),
         # 'right_range': function_range(expr[0], symbol, S.Reals)
-        'range': (gm, gmax)
+       # 'range': (gm, gmax)
 
         }
 
-    #TODO: it crashes for large polar functions
-    #TODO: fix it when 
     else:
        # print(user_input.count('x') >= 2) then skip for trigs
         try:
@@ -93,12 +75,14 @@ def expression_analyzer(symbol, expr, user_input, ls): #(symb, expr)
             'type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
             'derivative': diff(expr, symbol),
             #'roots': [i for i in solve(expr, symbol) if i.is_real] if not flag else 'Cannot compute due to expression complexity',
+            'roots': roots,
             'domain':text_formatter.make_pretty_text(continuous_domain(expr, symbol, S.Reals)) \
                                 if not flag else 'Cannot compute due to expression complexity', 
-            'range': text_formatter.make_pretty_text(function_range(expr, symbol, S.Reals)) \
-                                if not flag else 'Cannot compute due to expression complexity'
+            #'range': text_formatter.make_pretty_text(function_range(expr, symbol, S.Reals)) \
+                               # if not flag else 'Cannot compute due to expression complexity'
             }
         except NotImplementedError:
+            print('NOT IMPLEMENT ERROR')
             INFO = {
             'input': user_input,
             'type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',

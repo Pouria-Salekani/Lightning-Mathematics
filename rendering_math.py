@@ -6,6 +6,29 @@ import config
 
 noise = OpenSimplex(seed=55)
 
+
+def polar_roots(ls):
+    roots = []
+    for i in range(len(ls)-1):
+        x1, y1, r1, theta1 = ls[i]
+        x2, y2, r2, theta2 = ls[i+1]        
+        if r1*r2 < 0:
+            roots.append(round((theta1+theta2)/2, 2))
+
+    # print(ls)
+    # print(sorted(list(set(ls))[:10]))
+    return sorted(list(set(roots)))[:10] #remove duplicates 
+
+def parametric_roots(ls):  #not really 'roots' more like x-axis crossings
+    roots = []  
+    for i in range(len(ls)-1):
+            x1, y1, t1 = ls[i]
+            x2 ,y2, t2 = ls[i+1]
+            if y1*y2 < 0:
+                roots.append(round((x1+x2)/2,2))
+
+    return sorted(list(set(roots)))[:10]
+
 def graph_to_screen(x, y):
     X = config.center[0] + x*config.SCALE #right
     Y = config.center[1] - y*config.SCALE #up
@@ -28,8 +51,8 @@ def generate_single(f):
 
 def generate_polar(f):
     points = []
-    root_ls = []
-    for i in range(0, 2000, 10):
+    ls = []
+    for i in range(1, 2000, 10):
         theta = i / 100 #TODO: change scaling later
         r = f(theta)
         x = 3 * r * cos(theta)
@@ -39,21 +62,23 @@ def generate_polar(f):
         x_,y_ = graph_to_screen(x,y)
         if -100 < x_ < 100 + config.WIDTH and -100 < y_ < 100 + config.HEIGHT:
             points.append((x_,y_))
-            root_ls.append((x_ / 3, y_ / 3, theta))
-
+            ls.append((x_ / 3, y_ / 3, r, theta))
+    
+    root_ls = polar_roots(ls)
     return points, root_ls
 
 def generate_parametric(f_x, f_y):
     points = []
-    root_ls = []
+    ls = []
     for i in range(1, 1100, 5):
         t = i / 100 #TODO: change scaling later
         x = 3 * f_x(t)
         y = 3 * f_y(t)
 
         points.append((graph_to_screen(x,y)))
-        root_ls.append((x / 3, y / 3, t))  #ADD THE RAW VALUES NOT SCALED
+        ls.append((x / 3, y / 3, t))  #ADD THE RAW VALUES NOT SCALED
 
+    root_ls = parametric_roots(ls)
     return points, root_ls
 
 # follows a random procedure, no simplex noise

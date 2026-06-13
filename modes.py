@@ -76,9 +76,10 @@ def user_input(m_variable):
         equation = user_expr #like sin(5*theta)
         f = lambdify(theta_, equation, 'math')
         
-        encyclopedia.expression_analyzer(theta_, equation, m_variable)
+        res, ls = render.generate_polar(f)
+        encyclopedia.expression_analyzer(theta_, equation, m_variable, ls)
         
-        res = render.generate_polar(f)
+        #res, ls = render.generate_polar(f)
         if len(res) <= 2:
             error = 'Graph is outside the screen, please try a smaller constant.'
 

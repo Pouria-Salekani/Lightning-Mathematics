@@ -8,6 +8,7 @@ def interval_pretty(f):
         pretty_text = f'{left}'+f'{f.start}, {f.end}'+f'{right}'
 
         return pretty_text
+    return 'Cannot compute due to expression complexity'
 
 def union_pretty(f):
     text = ''
@@ -23,6 +24,8 @@ def make_pretty_text(f):   #(symbol, (sympfy1, sympfy2)) for parametric, check i
             return union_pretty(f)
         elif isinstance(f, Interval):
             return interval_pretty(f)
+        else:
+            return str(f)
     
     except NotImplementedError:
         return 'Undefined'
