@@ -47,7 +47,7 @@ while run:
                 text_box = text_box[:-1]
             elif event.key == pygame.K_RETURN:
                 print(text_box)
-                points, error = modes.user_input(text_box)
+                points, error, INFO = modes.user_input(text_box)
                 
                 if error is None:
                     user_input = text_box
@@ -114,7 +114,22 @@ while run:
 
 
     elif state == 'encyclopedia':
-        break
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            state = 'user'
+        font = pygame.font.SysFont(None, 35)
+        # type = INFO['type']
+        # if type == 'parametric':
+        #     y
+        # else:
+        #     break
+        y = 300
+        for key, value in INFO.items():
+            if key == 'Input' and len(value) == 2:
+                value = ', '.join(value)
+            surface = font.render(f'{key}: {value}', True, colors.WHITE)
+            window.blit(surface, (((config.WIDTH - surface.get_width()) // 2), y))
+            y += 60
+
 
     elif state == 'instructions':
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:

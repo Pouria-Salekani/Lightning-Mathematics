@@ -67,23 +67,23 @@ def expression_analyzer(symbol, expr, user_input, bundle): #(symb, expr)
     if type(expr) == tuple and len(expr) == 2:
         try:
             INFO = {
-            'input': user_input,
-            'type': 'Parametric',   #TODO: make own classification
-            'left_deriv': diff(expr[0]),
-            'right_deriv': diff(expr[1]),
+            'Input': user_input,
+            'Type': 'Parametric',   
+            'Left Derivative': diff(expr[0]),
+            'Right Derivative': diff(expr[1]),
             #'roots_left': solve(expr[0]),
             #'roots_right': solve(expr[1]),
             #'roots' : gs,
-            'roots': roots,
+            'Roots': roots,
             # 'left_domain': continuous_domain(expr[0], symbol, S.Reals),
             # 'right_domain': continuous_domain(expr[1], symbol, S.Reals),
-            'domain': text_formatter.make_pretty_text(continuous_domain(expr[0], symbol, S.Reals)
+            'Domain': text_formatter.make_pretty_text(continuous_domain(expr[0], symbol, S.Reals)
                                     .intersect(continuous_domain(expr[1], 
                                     symbol, S.Reals))),
             # 'left_range': function_range(expr[0], symbol, S.Reals),
             # 'right_range': function_range(expr[0], symbol, S.Reals)
         # 'range': (gm, gmax)
-            'range': text_formatter.make_pretty_text(function_range(
+            'Range': text_formatter.make_pretty_text(function_range(
                                     expr[1], symbol, S.Reals))    #just use it for y(t)
                                                                 #so expr[1]
 
@@ -91,41 +91,41 @@ def expression_analyzer(symbol, expr, user_input, bundle): #(symb, expr)
         except NotImplementedError:
              print('NOT IMPLEMENTED ^^^PARAMETRIC')
              INFO = {
-            'input': user_input,
-            'type': 'Parametric',   
-            'left_deriv': diff(expr[0]),
-            'right_deriv': diff(expr[1]),
-            'roots': roots,
-            'domain': 'Cannot compute due to expression complexity',
-            'range':range
+            'Input': user_input,
+            'Type': 'Parametric',   
+            'Left Derivative': diff(expr[0]),
+            'Right Derivative': diff(expr[1]),
+            'Roots (approximated)': roots,
+            'Domain': 'Cannot compute due to expression complexity',
+            'Range (approximated)':range
              }
 
     else:
        # print(user_input.count('x') >= 2) then skip for trigs
         try:
             INFO = {
-            'input': user_input,
-            'type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
-            'derivative': diff(expr, symbol),
-            'roots': solve(user_input),
-            'domain':text_formatter.make_pretty_text(continuous_domain(expr, symbol, S.Reals)),
+            'Input': user_input,
+            'Type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
+            'Derivative': diff(expr, symbol),
+            'Roots': solve(user_input),
+            'Domain':text_formatter.make_pretty_text(continuous_domain(expr, symbol, S.Reals)),
                                # if not flag else 'Cannot compute due to expression complexity', 
-            'range': text_formatter.make_pretty_text(function_range(expr, symbol, S.Reals))
+            'Range': text_formatter.make_pretty_text(function_range(expr, symbol, S.Reals))
                                #if not flag else 'Cannot compute due to expression complexity'
             }
         except NotImplementedError:
             print('NOT IMPLEMENT ERROR')
             INFO = {
-            'input': user_input,
-            'type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
-            'derivative': diff(expr, symbol),
-            'roots': f'Approximated roots: {roots}',
-            'domain':'Cannot compute due to expression complexity', 
-            'range': f'Approximated range: {range}'
+            'Input': user_input,
+            'Type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
+            'Derivative': diff(expr, symbol),
+            'Roots (approximated)': roots,
+            'Domain':'Cannot compute due to expression complexity', 
+            'Range (approximated)': range
             }
 
     print(INFO)
-    return
+    return INFO
 
 
 INFO = {
