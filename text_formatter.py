@@ -1,5 +1,13 @@
 from sympy import Interval, Union
 
+def complement_andelse_pretty(f):
+    _, text = f.args
+    ls = []
+    for i in text.args:
+        temp = str(i.lamda.args[1])
+        new_text = temp.replace('_n', 'n').replace('pi', 'π')
+        ls.append(new_text)
+    return ls
 
 def interval_pretty(f):
     if isinstance(f, Interval):
@@ -25,7 +33,7 @@ def make_pretty_text(f):   #(symbol, (sympfy1, sympfy2)) for parametric, check i
         elif isinstance(f, Interval):
             return interval_pretty(f)
         else:
-            return str(f)
+            return complement_andelse_pretty(f)
     
     except NotImplementedError:
         return 'Undefined'

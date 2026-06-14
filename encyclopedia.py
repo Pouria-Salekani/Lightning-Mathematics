@@ -1,8 +1,7 @@
-from sympy import lambdify, sympify, symbols, diff, S, Interval, Union, solve, sin, cos, tan, csc, cot, sec, atan, acos, asin
+from sympy import diff, S, solve
 from sympy.calculus.util import function_range, continuous_domain
 
 
-import math
 import text_formatter
 import config
 
@@ -31,41 +30,75 @@ def find_symbol(symbol):
     else:
         return 't'
 
-def expression_analyzer(symbol, expr, user_input, roots): #(symb, expr)
+def expression_analyzer(symbol, expr, user_input, bundle): #(symb, expr)
     # g = [j for i,j,q,o in roots] #range
     # gm = min(g)
     # gmax = max(g)
     # gs = []
     # gt = []
 
+    if bundle:
+        roots, range = bundle
+
+    # q = continuous_domain(expr[0], symbol, S.Reals).intersect(continuous_domain(expr[1], symbol, S.Reals))
+    # print(text_formatter.complement_andelse_pretty(q))
+    # print('q', type(q), q.args)
+    # e,r = q.args
+    # print('e', type(e), e.args)
+    # print('r', type(r), r.args)
+    # print()
     
-    print(symbol, expr, user_input)
-    flag = False
-    string_symbol = find_symbol(symbol) 
-    symb_counter = user_input.count(f'{string_symbol}') #if symbol in {config.}
-    print(symb_counter, string_symbol)
+    # for j in r.args:
+    #     print(j, '---->>>', j.lamda, j.lamda.args, j.lamda.args[1])
+        #for solns for tan when the domain is messy
+        #for parametric, domain is always an intersection
+        #make a separate case on where something like complement or image set exists
+
+    # print(symbol, expr, user_input)
+    # flag = False
+    # string_symbol = find_symbol(symbol) 
+    # symb_counter = user_input.count(f'{string_symbol}') #if symbol in {config.}
+    # print(symb_counter, string_symbol)
     
-    if symb_counter >= 2:
-        flag = False
+    # if symb_counter >= 2:
+    #     flag = False
 
     #TODO: also add notimplementederror for here
     if type(expr) == tuple and len(expr) == 2:
-        INFO = {
-        'input': user_input,
-        'type': 'Parametric',   #TODO: make own classification
-        'left_deriv': diff(expr[0]),
-        'right_deriv': diff(expr[1]),
-        #'roots_left': solve(expr[0]),
-        #'roots_right': solve(expr[1]),
-        #'roots' : gs,
-        'roots': roots,
-        'left_domain': continuous_domain(expr[0], symbol, S.Reals),
-        'right_domain': continuous_domain(expr[1], symbol, S.Reals),
-        # 'left_range': function_range(expr[0], symbol, S.Reals),
-        # 'right_range': function_range(expr[0], symbol, S.Reals)
-       # 'range': (gm, gmax)
+        try:
+            INFO = {
+            'input': user_input,
+            'type': 'Parametric',   #TODO: make own classification
+            'left_deriv': diff(expr[0]),
+            'right_deriv': diff(expr[1]),
+            #'roots_left': solve(expr[0]),
+            #'roots_right': solve(expr[1]),
+            #'roots' : gs,
+            'roots': roots,
+            # 'left_domain': continuous_domain(expr[0], symbol, S.Reals),
+            # 'right_domain': continuous_domain(expr[1], symbol, S.Reals),
+            'domain': text_formatter.make_pretty_text(continuous_domain(expr[0], symbol, S.Reals)
+                                    .intersect(continuous_domain(expr[1], 
+                                    symbol, S.Reals))),
+            # 'left_range': function_range(expr[0], symbol, S.Reals),
+            # 'right_range': function_range(expr[0], symbol, S.Reals)
+        # 'range': (gm, gmax)
+            'range': text_formatter.make_pretty_text(function_range(
+                                    expr[1], symbol, S.Reals))    #just use it for y(t)
+                                                                #so expr[1]
 
-        }
+            }
+        except NotImplementedError:
+             print('NOT IMPLEMENTED ^^^PARAMETRIC')
+             INFO = {
+            'input': user_input,
+            'type': 'Parametric',   
+            'left_deriv': diff(expr[0]),
+            'right_deriv': diff(expr[1]),
+            'roots': roots,
+            'domain': 'Cannot compute due to expression complexity',
+            'range':range
+             }
 
     else:
        # print(user_input.count('x') >= 2) then skip for trigs
@@ -74,12 +107,11 @@ def expression_analyzer(symbol, expr, user_input, roots): #(symb, expr)
             'input': user_input,
             'type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
             'derivative': diff(expr, symbol),
-            #'roots': [i for i in solve(expr, symbol) if i.is_real] if not flag else 'Cannot compute due to expression complexity',
-            'roots': roots,
-            'domain':text_formatter.make_pretty_text(continuous_domain(expr, symbol, S.Reals)) \
-                                if not flag else 'Cannot compute due to expression complexity', 
-            #'range': text_formatter.make_pretty_text(function_range(expr, symbol, S.Reals)) \
-                               # if not flag else 'Cannot compute due to expression complexity'
+            'roots': solve(user_input),
+            'domain':text_formatter.make_pretty_text(continuous_domain(expr, symbol, S.Reals)),
+                               # if not flag else 'Cannot compute due to expression complexity', 
+            'range': text_formatter.make_pretty_text(function_range(expr, symbol, S.Reals))
+                               #if not flag else 'Cannot compute due to expression complexity'
             }
         except NotImplementedError:
             print('NOT IMPLEMENT ERROR')
@@ -87,9 +119,9 @@ def expression_analyzer(symbol, expr, user_input, roots): #(symb, expr)
             'input': user_input,
             'type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
             'derivative': diff(expr, symbol),
-            'roots': 'Cannot compute due to expression complexity',
+            'roots': f'Approximated roots: {roots}',
             'domain':'Cannot compute due to expression complexity', 
-            'range': 'Cannot compute due to expression complexity'
+            'range': f'Approximated range: {range}'
             }
 
     print(INFO)
@@ -119,83 +151,4 @@ INFO_parametric = {
 }
 
 
-
-
-# INFO['input'] = ww
-# INFO['derivative'] = diff(ww, x)
-# INFO['domain'] = continuous_domain(ww, x, S.Reals)
-# g = function_range(ww, x, S.Reals)
-# ff = continuous_domain(ww, x, S.Reals)
-
-
-
-
-def make_som(g):
-    if isinstance(g, Interval):
-        left = '(' if g.left_open else '['
-        right = ')' if g.right_open else ']'
-        pretty_text = f'{left}'+f'{g.start}, {g.end}'+f'{right}'
-
-        return pretty_text
-
-
-def what(ff):
-    print(ff)
-    print(type(ff))
-    if isinstance(ff, Union):
-        res = ''
-        for i in ff.args:
-            res += make_som(i) + ' U '
-
-        print(res[-1], res[-2])
-        return res if res[-1] != ' ' else res[:-2]
-    
-
-def func_info(f):   #(symbol, (sympfy1, sympfy2)) for parametric, check if len == 2
-    print('SUCCESS')
-    expression, func = f
-    if type(func) == tuple and len(func) == 2:  #works, for parametric, do a loop in an if statement
-        print('PARAMETRIC ', func, func[0], func[1])
-        print(expression,'---', func)
-        return
-    else:
-        return
-    try:
-        range = function_range(func, expression, S.Reals)  #sympfy, symbol
-        domain = continuous_domain(func, expression, S.Reals)
-
-        if range:
-            if isinstance(range, Union):
-                return #TODO: call union func
-            elif isinstance(range, Interval):
-                return #TODO: call interval func
-            
-        if domain:
-            if isinstance(domain, Union):
-                return #TODO: call union func
-            elif isinstance(domain, Interval):
-                return #TODO: call interval func
-
-    
-    except NotImplementedError: #important
-        INFO['range'] = 'Impossible'
-        print(INFO)
-    #print(what(ff), 'HHHHHH')
-        
-#EITGER DOMAIN OR RANGE COUDL HAVE A UNION OR INTERVAL, SO U NEED 4 CASES TOTAL
-    #actually u just need 2. if its union, its gonna cal interval, if its interval
-        #then, thats it but make sure to check for all 4, i guess 4 if statements
-
-# print(what())
-
-#only for intervals, unions will be different
-
-#cleaning the interval stuff type
-
-INFO['range'] = None
-
-
-
-# print(sstr(function_range(ww, x, S.Reals)))
-# print(INFO)
 

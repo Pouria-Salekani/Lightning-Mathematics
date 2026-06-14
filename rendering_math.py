@@ -7,6 +7,17 @@ import config
 noise = OpenSimplex(seed=55)
 
 
+def check_on_screen(x,y):
+    return -100 < x < 100 + config.WIDTH and -100 < y < 100 + config.HEIGHT
+
+def range_func(ls):
+    if len(ls[0]) == 4:
+        num = [r for _,_,r,_ in ls]
+        return (min(num), max(num))
+    else:
+        num = [y for _,y,_ in ls]
+        return (min(num), max(num))
+
 def polar_roots(ls):
     roots = []
     for i in range(len(ls)-1):
@@ -24,9 +35,10 @@ def parametric_roots(ls):  #not really 'roots' more like x-axis crossings
     for i in range(len(ls)-1):
             x1, y1, t1 = ls[i]
             x2 ,y2, t2 = ls[i+1]
-            if y1*y2 < 0:
+            if y1*y2 < 0: #y(t) = 0 --- x-intercepts
                 roots.append(round((x1+x2)/2,2))
 
+    print('para roots ', len(roots))
     return sorted(list(set(roots)))[:10]
 
 def graph_to_screen(x, y):
@@ -44,7 +56,9 @@ def generate_single(f):
         except:
             continue
 
-        points.append((graph_to_screen(x,y)))
+        x_,y_ = graph_to_screen(x,y)
+        if check_on_screen(x_,y_):
+            points.append((x_,y_))
 
     return points, None
 
@@ -60,12 +74,15 @@ def generate_polar(f):
 
         #TODO: add auto-scaling for all of the graphs
         x_,y_ = graph_to_screen(x,y)
-        if -100 < x_ < 100 + config.WIDTH and -100 < y_ < 100 + config.HEIGHT:
+        if check_on_screen(x_,y_):
             points.append((x_,y_))
             ls.append((x_ / 3, y_ / 3, r, theta))
-    
-    root_ls = polar_roots(ls)
-    return points, root_ls
+    if ls:
+        root_ls = polar_roots(ls)
+        range_ls = range_func(ls)
+        return points, (root_ls, range_ls)
+    else:
+        return points, (0,0)
 
 def generate_parametric(f_x, f_y):
     points = []
@@ -75,11 +92,22 @@ def generate_parametric(f_x, f_y):
         x = 3 * f_x(t)
         y = 3 * f_y(t)
 
-        points.append((graph_to_screen(x,y)))
-        ls.append((x / 3, y / 3, t))  #ADD THE RAW VALUES NOT SCALED
+        x_,y_ = graph_to_screen(x,y)
+        if check_on_screen(x_,y_):
+            points.append((x_,y_))
+            ls.append((x / 3, y / 3, t))  #ADD THE RAW VALUES NOT SCALED
 
-    root_ls = parametric_roots(ls)
-    return points, root_ls
+    # root_ls = parametric_roots(ls)
+    # range_ls = range_func(ls)
+    # return points, (root_ls, range_ls)
+    print('huh ', ls)
+
+    if ls:
+        root_ls = parametric_roots(ls)
+        range_ls = range_func(ls)
+        return points, (root_ls, range_ls)
+    else:
+        return points, (0,0)
 
 # follows a random procedure, no simplex noise
 def branch_displacement(pts, per_x, per_y):

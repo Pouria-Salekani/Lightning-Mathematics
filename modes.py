@@ -35,8 +35,8 @@ def user_input(m_variable):
         f_y = lambdify(t, s_expr2, 'math')
         
 
-        res, ls = render.generate_parametric(f_x, f_y)
-        encyclopedia.expression_analyzer(t, (s_expr1, s_expr2), expressions, ls)
+        res, bundle = render.generate_parametric(f_x, f_y)
+        encyclopedia.expression_analyzer(t, (s_expr1, s_expr2), expressions, bundle)
         
         #res, ls = render.generate_parametric(f_x, f_y)
         if len(res) <= 2:
@@ -66,9 +66,11 @@ def user_input(m_variable):
         f = lambdify(x, equation, 'math')
         
         #encyclopedia.test(m_variable)
-        encyclopedia.expression_analyzer(x, equation, m_variable)
+       
+        res, bundle = render.generate_single(f)
+        encyclopedia.expression_analyzer(x, equation, m_variable, bundle)
         
-        res = render.generate_single(f)
+        print(res)
         if len(res) <= 2:
             error = 'Graph is outside the screen, please try a smaller constant.'
     
@@ -76,8 +78,8 @@ def user_input(m_variable):
         equation = user_expr #like sin(5*theta)
         f = lambdify(theta_, equation, 'math')
         
-        res, ls = render.generate_polar(f)
-        encyclopedia.expression_analyzer(theta_, equation, m_variable, ls)
+        res, bundle = render.generate_polar(f)
+        encyclopedia.expression_analyzer(theta_, equation, m_variable, bundle)
         
         #res, ls = render.generate_polar(f)
         if len(res) <= 2:
