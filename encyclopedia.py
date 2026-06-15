@@ -15,7 +15,6 @@ def find_symbol(symbol):
 def expression_analyzer(symbol, expr, user_input, bundle): #(symb, expr)
     if bundle:
         roots, range = bundle
-        print('root here ', roots)
 
   
     if type(expr) == tuple and len(expr) == 2:
