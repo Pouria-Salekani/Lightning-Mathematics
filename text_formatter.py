@@ -3,6 +3,10 @@ from sympy import Interval, Union
 def complement_andelse_pretty(f):
     _, text = f.args
     ls = []
+    
+    if not hasattr(text.args, 'lamda'):
+        return str(f) +'YOOO'
+    
     for i in text.args:
         temp = str(i.lamda.args[1])
         new_text = temp.replace('_n', 'n').replace('pi', 'π')
