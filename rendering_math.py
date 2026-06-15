@@ -55,6 +55,8 @@ def generate_single(f):
             y = f(x)
             if isinstance(y, complex):
                 continue
+            elif not math.isfinite(y):
+                continue
         except:
             continue
 
