@@ -51,7 +51,6 @@ while run:
                 
                 if error is None:
                     user_input = text_box
-                    #encyclopedia.func_info(exprs_info) from modes--->enclcy
                     text_box = ''
                     error_text = ''
                     state = 'draw'
@@ -194,12 +193,6 @@ while run:
         pygame.draw.lines(window, layer3, False, jagged_pts, 3 + thickness)
 
 
-        #a loop for branches because they're all diff
-        # for x, y in branches: 
-        #     pts = [x,y]     #branches is a 3D, so doing this, makes it 2D, like so: [(......), (......)]
-        #     jagged_branch = render.branch_displacement(pts, -8, 8)
-        #     jagged_branch = render.branch_displacement(jagged_branch, -3, 3)
-        
         for j in multi_jagged_branches:
             pygame.draw.lines(window, layer1, False, j, 4)
             pygame.draw.lines(window, layer2, False, j, 2)

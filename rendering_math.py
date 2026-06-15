@@ -27,10 +27,7 @@ def polar_roots(ls):
         if r1*r2 < 0:
             roots.append(round((theta1+theta2)/2, 2))
 
-    # print(ls)
-    # print(sorted(list(set(ls))[:10]))
-    if len(list(set(roots))) >= 10:
-        return '[' + sorted(list(set(roots)))[:10] + ',...' + ']'
+   
     return sorted(list(set(roots)))[:10] #remove duplicates 
 
 def roots(ls):  #not really 'roots' more like x-axis crossings
@@ -40,9 +37,7 @@ def roots(ls):  #not really 'roots' more like x-axis crossings
             x2 ,y2, t2 = ls[i+1]
             if y1*y2 < 0: #y(t) = 0 --- x-intercepts
                 roots.append(round((x1+x2)/2,2))
-    # print(roots)
-    # if len(list(set(roots))) >= 5:
-    #     return '[' + sorted(list(set(roots)))[:5] + ',...' + ']'
+    
     return sorted(list(set(roots)))[:10]
 
 def graph_to_screen(x, y):
@@ -80,7 +75,7 @@ def generate_polar(f):
     points = []
     ls = []
     for i in range(1, 2000, 10):
-        theta = i / 100 #TODO: change scaling later
+        theta = i / 100 
         r = f(theta)
         if isinstance(r, complex):
             continue
@@ -105,7 +100,7 @@ def generate_parametric(f_x, f_y):
     points = []
     ls = []
     for i in range(1, 1100, 5):
-        t = i / 100 #TODO: change scaling later
+        t = i / 100 
         x = 3 * f_x(t)
         y = 3 * f_y(t)
         if isinstance(x,complex) or isinstance(y, complex):
@@ -114,11 +109,9 @@ def generate_parametric(f_x, f_y):
         x_,y_ = graph_to_screen(x,y)
         if check_on_screen(x_,y_):
             points.append((x_,y_))
-            ls.append((x / 3, y / 3, t))  #ADD THE RAW VALUES NOT SCALED
+            ls.append((x / 3, y / 3, t)) 
 
-    # root_ls = parametric_roots(ls)
-    # range_ls = range_func(ls)
-    # return points, (root_ls, range_ls)
+    
     if ls:
         root_ls = roots(ls)
         range_ls = range_func(ls)

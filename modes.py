@@ -40,12 +40,10 @@ def user_input(m_variable):
         res, bundle = render.generate_parametric(f_x, f_y)
         info = encyclopedia.expression_analyzer(t, (s_expr1, s_expr2), expressions, bundle)
         
-        #res, ls = render.generate_parametric(f_x, f_y)
         if len(res) <= 2:
             error = 'Graph is outside the screen, please try a smaller constant.'
 
         return res, error, info
-        #return render.generate_parametric(f_x, f_y), None
     
     try:
         user_expr = sympify(m_variable, locals={'pi':pi})
@@ -69,7 +67,6 @@ def user_input(m_variable):
         equation = user_expr #so, sin(x), cos(x), x^2, etc...
         f = lambdify(x, equation, 'math')
         
-        #encyclopedia.test(m_variable)
        
         res, bundle = render.generate_single(f)
         info = encyclopedia.expression_analyzer(x, equation, m_variable, bundle)
@@ -84,12 +81,8 @@ def user_input(m_variable):
         res, bundle = render.generate_polar(f)
         info = encyclopedia.expression_analyzer(theta_, equation, m_variable, bundle)
         
-        #res, ls = render.generate_polar(f)
         if len(res) <= 2:
             error = 'Graph is outside the screen, please try a smaller constant.'
-
-    # else:
-    #     return None, 'Please enter a valid expression. Press "?" for instructions.', None
 
     return res, error, info
 
