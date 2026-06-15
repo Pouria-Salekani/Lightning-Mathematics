@@ -29,6 +29,8 @@ def polar_roots(ls):
 
     # print(ls)
     # print(sorted(list(set(ls))[:10]))
+    if len(list(set(roots))) >= 10:
+        return '[' + sorted(list(set(roots)))[:10] + ',...' + ']'
     return sorted(list(set(roots)))[:10] #remove duplicates 
 
 def roots(ls):  #not really 'roots' more like x-axis crossings
@@ -38,7 +40,9 @@ def roots(ls):  #not really 'roots' more like x-axis crossings
             x2 ,y2, t2 = ls[i+1]
             if y1*y2 < 0: #y(t) = 0 --- x-intercepts
                 roots.append(round((x1+x2)/2,2))
-
+    # print(roots)
+    # if len(list(set(roots))) >= 5:
+    #     return '[' + sorted(list(set(roots)))[:5] + ',...' + ']'
     return sorted(list(set(roots)))[:10]
 
 def graph_to_screen(x, y):

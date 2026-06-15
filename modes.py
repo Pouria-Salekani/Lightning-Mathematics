@@ -16,6 +16,7 @@ def user_input(m_variable):
     
     if m_variable.strip() == '':    
         return None, 'Invalid syntax.', None
+        
     
     elif ',' in m_variable:    #parametric
         expressions = m_variable.split(',')
@@ -48,6 +49,8 @@ def user_input(m_variable):
     
     try:
         user_expr = sympify(m_variable, locals={'pi':pi})
+        if not user_expr.free_symbols.issubset({x,theta_,t}): #this is necessary for reserved keywords
+            error = 'Unrecognized variable. Please use x, theta, or t.'
     except:
         return None, 'Invalid, please press "?" for instructions.', None
     
@@ -84,6 +87,9 @@ def user_input(m_variable):
         #res, ls = render.generate_polar(f)
         if len(res) <= 2:
             error = 'Graph is outside the screen, please try a smaller constant.'
+
+    # else:
+    #     return None, 'Please enter a valid expression. Press "?" for instructions.', None
 
     return res, error, info
 

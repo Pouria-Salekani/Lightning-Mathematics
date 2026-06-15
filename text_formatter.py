@@ -23,6 +23,8 @@ def union_pretty(f):
     text = ''
     for i in f.args:
         text += interval_pretty(i) + ' U '
+        if text[:6] == 'Cannot':
+            return 'Cannot compute due to expression complexity'
 
     return text if text[-1] != ' ' else text[:-2]
     
