@@ -7,7 +7,10 @@ def complement_andelse_pretty(f):
         temp = str(i.lamda.args[1])
         new_text = temp.replace('_n', 'n').replace('pi', 'π')
         ls.append(new_text)
-    return ls
+    return '[' + ', '.join(ls) + ']'
+
+    #TODO: MAKE THE ABOVE RETURN IT WITHOUT THE STRING THINGYS ATTACHED
+    #IT RETURNS IT LIKE [' ... ', '...'] do it without the strings
 
 def interval_pretty(f):
     if isinstance(f, Interval):

@@ -115,7 +115,7 @@ while run:
 
     elif state == 'encyclopedia':
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            state = 'user'
+            state = 'draw'
         font = pygame.font.SysFont(None, 35)
         # type = INFO['type']
         # if type == 'parametric':
@@ -123,6 +123,7 @@ while run:
         # else:
         #     break
         y = 300
+        #TODO: maybe add press esc to go back??
         for key, value in INFO.items():
             if key == 'Input' and len(value) == 2:
                 value = ', '.join(value)
