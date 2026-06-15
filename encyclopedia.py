@@ -36,6 +36,8 @@ def expression_analyzer(symbol, expr, user_input, bundle): #(symb, expr)
     # gmax = max(g)
     # gs = []
     # gt = []
+    # roots, range = None
+    # print(bundle)
 
     if bundle:
         roots, range = bundle
@@ -74,7 +76,7 @@ def expression_analyzer(symbol, expr, user_input, bundle): #(symb, expr)
             #'roots_left': solve(expr[0]),
             #'roots_right': solve(expr[1]),
             #'roots' : gs,
-            'Roots': roots,
+            'Roots': roots if roots else 'None',
             # 'left_domain': continuous_domain(expr[0], symbol, S.Reals),
             # 'right_domain': continuous_domain(expr[1], symbol, S.Reals),
             'Domain': text_formatter.make_pretty_text(continuous_domain(expr[0], symbol, S.Reals)
@@ -95,7 +97,7 @@ def expression_analyzer(symbol, expr, user_input, bundle): #(symb, expr)
             'Type': 'Parametric',   
             'Left Derivative': diff(expr[0]),
             'Right Derivative': diff(expr[1]),
-            'Roots (approximated)': roots,
+            'Roots (approximated)': roots if roots else 'None',
             'Domain': 'Cannot compute due to expression complexity',
             'Range (approximated)':range
              }
@@ -119,7 +121,7 @@ def expression_analyzer(symbol, expr, user_input, bundle): #(symb, expr)
             'Input': user_input,
             'Type': 'Single' if symbol.free_symbols == {config.X} else 'Polar',
             'Derivative': diff(expr, symbol),
-            'Roots (approximated)': roots,
+            'Roots (approximated)': roots if roots else 'None',
             'Domain':'Cannot compute due to expression complexity', 
             'Range (approximated)': range
             }

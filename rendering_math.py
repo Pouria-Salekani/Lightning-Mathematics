@@ -3,6 +3,7 @@ from math import sin, cos
 import random
 from opensimplex import OpenSimplex
 import config
+from sympy import solve
 
 noise = OpenSimplex(seed=55)
 
@@ -11,7 +12,7 @@ def check_on_screen(x,y):
     return -100 < x < 100 + config.WIDTH and -100 < y < 100 + config.HEIGHT
 
 def range_func(ls):
-    if len(ls[0]) == 4:
+    if len(ls[0]) == 4: #polar
         num = [r for _,_,r,_ in ls]
         return (min(num), max(num))
     else:
@@ -30,7 +31,7 @@ def polar_roots(ls):
     # print(sorted(list(set(ls))[:10]))
     return sorted(list(set(roots)))[:10] #remove duplicates 
 
-def parametric_roots(ls):  #not really 'roots' more like x-axis crossings
+def roots(ls):  #not really 'roots' more like x-axis crossings
     roots = []  
     for i in range(len(ls)-1):
             x1, y1, t1 = ls[i]
@@ -38,7 +39,6 @@ def parametric_roots(ls):  #not really 'roots' more like x-axis crossings
             if y1*y2 < 0: #y(t) = 0 --- x-intercepts
                 roots.append(round((x1+x2)/2,2))
 
-    print('para roots ', len(roots))
     return sorted(list(set(roots)))[:10]
 
 def graph_to_screen(x, y):
@@ -49,18 +49,27 @@ def graph_to_screen(x, y):
 
 def generate_single(f):
     points = []
+    ls = []
     for i in range(-600,601, 5):
         x = i / config.SCALE
         try:
             y = f(x)
+            if isinstance(y, complex):
+                continue
         except:
             continue
 
         x_,y_ = graph_to_screen(x,y)
         if check_on_screen(x_,y_):
             points.append((x_,y_))
+            ls.append((x, y, i))
 
-    return points, None
+    if ls:
+        root_ls = roots(ls)
+        range_ls = range_func(ls)
+        return points, (root_ls, range_ls)
+    else:
+        return points, (0,0)
 
 
 def generate_polar(f):
@@ -69,14 +78,18 @@ def generate_polar(f):
     for i in range(1, 2000, 10):
         theta = i / 100 #TODO: change scaling later
         r = f(theta)
+        if isinstance(r, complex):
+            continue
         x = 3 * r * cos(theta)
         y = 3 * r * sin(theta)
+
+
 
         #TODO: add auto-scaling for all of the graphs
         x_,y_ = graph_to_screen(x,y)
         if check_on_screen(x_,y_):
             points.append((x_,y_))
-            ls.append((x_ / 3, y_ / 3, r, theta))
+            ls.append((x / 3, y / 3, r, theta))   #??? why is this x_ / 3...
     if ls:
         root_ls = polar_roots(ls)
         range_ls = range_func(ls)
@@ -91,6 +104,8 @@ def generate_parametric(f_x, f_y):
         t = i / 100 #TODO: change scaling later
         x = 3 * f_x(t)
         y = 3 * f_y(t)
+        if isinstance(x,complex) or isinstance(y, complex):
+            continue
 
         x_,y_ = graph_to_screen(x,y)
         if check_on_screen(x_,y_):
@@ -100,10 +115,8 @@ def generate_parametric(f_x, f_y):
     # root_ls = parametric_roots(ls)
     # range_ls = range_func(ls)
     # return points, (root_ls, range_ls)
-    print('huh ', ls)
-
     if ls:
-        root_ls = parametric_roots(ls)
+        root_ls = roots(ls)
         range_ls = range_func(ls)
         return points, (root_ls, range_ls)
     else:

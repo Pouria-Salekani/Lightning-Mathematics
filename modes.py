@@ -77,7 +77,7 @@ def user_input(m_variable):
     elif inpt == {theta_}:
         equation = user_expr #like sin(5*theta)
         f = lambdify(theta_, equation, 'math')
-        
+
         res, bundle = render.generate_polar(f)
         info = encyclopedia.expression_analyzer(theta_, equation, m_variable, bundle)
         

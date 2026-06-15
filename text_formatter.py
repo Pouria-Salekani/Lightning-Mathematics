@@ -9,8 +9,6 @@ def complement_andelse_pretty(f):
         ls.append(new_text)
     return '[' + ', '.join(ls) + ']'
 
-    #TODO: MAKE THE ABOVE RETURN IT WITHOUT THE STRING THINGYS ATTACHED
-    #IT RETURNS IT LIKE [' ... ', '...'] do it without the strings
 
 def interval_pretty(f):
     if isinstance(f, Interval):
