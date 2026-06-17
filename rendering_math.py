@@ -28,7 +28,7 @@ def polar_roots(ls):
             roots.append(round((theta1+theta2)/2, 2))
 
    
-    return sorted(list(set(roots)))[:10] #remove duplicates 
+    return sorted(list(set(roots)))[:10] 
 
 def roots(ls):  #not really 'roots' more like x-axis crossings
     roots = []  
@@ -90,7 +90,7 @@ def generate_polar(f):
         x_,y_ = graph_to_screen(x,y)
         if check_on_screen(x_,y_):
             points.append((x_,y_))
-            ls.append((x / 3, y / 3, r, theta))   #??? why is this x_ / 3...
+            ls.append((x / 3, y / 3, r, theta))   
     if ls:
         root_ls = polar_roots(ls)
         range_ls = range_func(ls)

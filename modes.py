@@ -1,7 +1,6 @@
 from sympy import lambdify, sympify, symbols, pi
 from math import sin, cos
 import rendering_math as render
-import numpy as np
 import encyclopedia
 
 x = symbols('x')
