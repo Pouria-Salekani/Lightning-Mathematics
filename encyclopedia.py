@@ -19,6 +19,8 @@ def expression_analyzer(symbol, expr, user_input, bundle): #(symb, expr)
   
     if type(expr) == tuple and len(expr) == 2:
         try:
+            
+            
             INFO = {
             'Input': user_input,
             'Type': 'Parametric',   
@@ -28,9 +30,8 @@ def expression_analyzer(symbol, expr, user_input, bundle): #(symb, expr)
             'Domain': text_formatter.make_pretty_text(continuous_domain(expr[0], symbol, S.Reals)
                                     .intersect(continuous_domain(expr[1], 
                                     symbol, S.Reals))),
-            'Range': text_formatter.make_pretty_text(function_range(
-                                    expr[1], symbol, S.Reals))    #just use it for y(t)
-                                                                #so expr[1]
+            'Range': range                          #just use it for y(t)
+                                                            #so expr[1]
 
             }
         except NotImplementedError:
