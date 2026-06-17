@@ -49,7 +49,7 @@ def graph_to_screen(x, y):
 def generate_single(f):
     points = []
     ls = []
-    for i in range(-600,601, 5):
+    for i in range(-700,701, 5):
         x = i / config.SCALE
         try:
             y = f(x)
