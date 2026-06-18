@@ -168,7 +168,7 @@ The lightning effect is generated using three primary mathematical ideas:
 
 1. Midpoint Displacement
 2. Perpendicular Vectors
-3. OpenSimplex Noise (Simplex Noise)
+3. Simplex Noise
 
 For illustration, consider the graph:
 
