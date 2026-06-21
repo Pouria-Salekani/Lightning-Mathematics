@@ -31,7 +31,7 @@ with a cool lightning effect. Furthermore, the application an encyclopedia page 
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Pouria-Salekani/Lightning-Mathematics.git
 ```
 
 2. Navigate into the project directory:
