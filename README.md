@@ -150,7 +150,7 @@ The encyclopedia displays the following:
 Complex expressions may require several seconds to compute. This delay is typically caused by symbolic computations involving derivatives, roots, domains, or ranges.
 This is esspecially true for expressions containing trigonometric functions, such as: 
 
-tan(x⁵) + sin(x⁷), 
+$tan(x^5) + sin(x^7)$, 
 
 which is inputted as `tan(x**5) + sin(x**7)`.
 
@@ -172,7 +172,7 @@ The lightning effect is generated using three primary mathematical ideas:
 
 For illustration, consider the graph:
 
-`sin(x)`
+$sin(x)$
 
 ---
 
@@ -180,15 +180,15 @@ For illustration, consider the graph:
 
 Suppose two neighboring points on the graph are:
 
-P₁ = (x₁, y₁)
+$P_1 = (x_1,y_1)$
 
-P₂ = (x₂, y₂)
+$P_2 = (x_2,y_2)$
 
 The midpoint is computed as:
 
-M = (P₁ + P₂)/2
+$M = (P_1 + P_2)/2$
 
-Within the Pygame loop, midpoints will be generated recursively between neighboring points. Using `sin(x)` as our example, between any two points,
+Within the Pygame loop, midpoints will be generated recursively between neighboring points. Using $sin(x)$ as our example, between any two points,
 the midpoint will be used to create a "valley" between them. This is the first step of constructing the lightning's jagged structure.
 
 ---
@@ -201,13 +201,13 @@ For each segment, a perpendicular vector is computed and normalized. Then, the m
 
 Mathematically:
 
-M' = M + δv
+$M' = M + \delta v$
 
 where:
 
-* M is the original midpoint
-* v is the normalized perpendicular vector
-* δ is a pertrubartion amount
+* $M$ is the original midpoint
+* $v$ is the normalized perpendicular vector
+* $\delta$ is a pertrubartion amount
 
 Without the perpendicular vector, the midpoint would remain on the original curve and the lightning effect would not form.
 
@@ -219,7 +219,7 @@ we need to make it more visible by perturbing it in a smooth fashion.
 
 ### Simplex Noise
 
-The perturbation value δ is generated using OpenSimplex Noise.
+The perturbation value $\delta$ is generated using OpenSimplex Noise.
 
 Unlike purely random values, Simplex Noise produces smoothly varying values. Neighboring points tend to receive similar displacements, creating visually coherent lightning rather than chaotic spikes.
 
@@ -231,8 +231,8 @@ perturb = noise.noise2(s * 15, time) * 10
 
 where:
 
-* s is the normalized segment position
-* time animates the noise field
+* $s$ is the normalized segment position
+* $time$ animates the noise field
 * and the `10` is a scalar
 
 This creates the appearance of living, moving electricity. This is exactly what makes the "valley" visible. Without this and just the above two mathematical principles,
@@ -278,7 +278,7 @@ Current limitations include:
 * Some symbolic domain and range computations may be difficult or impossible for SymPy to compute exactly.
 * Certain expressions (espcially trigonometric) may require several seconds to analyze.
 * Approximate numerical methods are used as fallbacks when symbolic methods fail.
-* Expressions involving asymptotic behavior (such as tan(x)) may produce approximate sampled ranges rather than exact ranges.
+* Expressions involving asymptotic behavior, such as $tan(x)$, may produce approximate sampled ranges rather than exact ranges.
 
 ---
 
