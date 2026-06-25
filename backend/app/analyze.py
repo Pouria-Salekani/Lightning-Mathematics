@@ -19,8 +19,9 @@ def expression_analyzer(symbol, expr, user_input, bundle):
     if bundle:
         roots, range = bundle
 
-  
-    if type(expr) == tuple and len(expr) == 2:
+    print(expr, type(expr))
+
+    if type(expr) == list and len(expr) == 2:
         try:
             
             
@@ -76,13 +77,3 @@ def expression_analyzer(symbol, expr, user_input, bundle):
     INFO = {k: str(v) for k, v in INFO.items()}
     return INFO
 
-
-
-
-def test(expr, bundle):
-    
-    return
-    # return {
-    #     'Input': user_input,
-    #     'Type': 'Single' if symbol.free_symbols == {config.X} else 'Polar'
-    # }
