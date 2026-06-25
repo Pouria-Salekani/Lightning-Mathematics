@@ -1,7 +1,7 @@
 from sympy import lambdify, sympify, symbols, pi
 from math import sin, cos
 import rendering_math as render
-import encyclopedia
+import encyclopedia as encyclopedia
 
 x = symbols('x')
 theta_ = symbols('theta')

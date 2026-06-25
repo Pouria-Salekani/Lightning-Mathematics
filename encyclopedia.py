@@ -1,6 +1,6 @@
 from sympy import diff, S, solve
 from sympy.calculus.util import function_range, continuous_domain
-import text_formatter
+import backend.app.text_formatter as text_formatter
 import config
 
 
