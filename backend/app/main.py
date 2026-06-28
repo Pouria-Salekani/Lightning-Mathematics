@@ -3,9 +3,13 @@ from pydantic import BaseModel
 from app.analyze import expression_analyzer
 from typing import Any
 from sympy import sympify, pi
+from app.database import Base, engine
 from app import config
+from app import models #automatically loads the class
 
 app = FastAPI()
+Base.metadata.create_all(bind=engine)
+
 class Analyzer(BaseModel):
     expression: Any
     bundle: list[Any] | None = None
