@@ -2,7 +2,7 @@ from sympy import lambdify, sympify, symbols, pi
 from math import sin, cos
 import rendering_math as render
 import encyclopedia as encyclopedia
-from api_to_backend import expression_analyzer
+from api_to_backend import api_expression_analyzer
 
 x = symbols('x')
 theta_ = symbols('theta')
@@ -39,7 +39,7 @@ def user_input(m_variable):
 
         res, bundle = render.generate_parametric(f_x, f_y)
         #info = encyclopedia.expression_analyzer(t, (s_expr1, s_expr2), expressions, bundle)
-        info = expression_analyzer(expressions, bundle)
+        info = api_expression_analyzer(expressions, bundle)
 
         if len(res) <= 2:
             error = 'Graph is outside the screen, please try a smaller constant.'
@@ -71,7 +71,7 @@ def user_input(m_variable):
        
         res, bundle = render.generate_single(f)
         #info = encyclopedia.expression_analyzer(x, equation, m_variable, bundle)
-        info = expression_analyzer(m_variable, bundle)
+        info = api_expression_analyzer(m_variable, bundle)
 
         if len(res) <= 2:
             error = 'Graph is outside the screen, please try a smaller constant.'
@@ -82,7 +82,7 @@ def user_input(m_variable):
 
         res, bundle = render.generate_polar(f)
         #info = encyclopedia.expression_analyzer(theta_, equation, m_variable, bundle)
-        info = expression_analyzer(m_variable, bundle)
+        info = api_expression_analyzer(m_variable, bundle)
 
         if len(res) <= 2:
             error = 'Graph is outside the screen, please try a smaller constant.'

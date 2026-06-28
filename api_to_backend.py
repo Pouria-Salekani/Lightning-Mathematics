@@ -2,7 +2,7 @@ import requests
 
 URL = 'http://127.0.0.1:8000/analyze'
 
-def expression_analyzer(expression, bundle=None):
+def api_expression_analyzer(expression, bundle=None):
     hash = {
         'expression':expression,
         'bundle':bundle
