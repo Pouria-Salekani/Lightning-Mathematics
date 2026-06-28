@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 .vscode/
+.env
 
 version1_jagged.py
 version2_jagged.py

@@ -39,6 +39,7 @@ def expression_parser(expr):
 def home():
     return {'success': 'is running'}
 
+# API
 @app.post('/analyze')
 def analyzer_expr(request: Analyzer):   #type of 'Analyzer' basemodel
     user_expr = expression_parser(request.expression)
