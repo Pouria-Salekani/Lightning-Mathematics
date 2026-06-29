@@ -48,11 +48,7 @@ def expression_parser(expr):
 
 
 
-@app.get('/')
-def home():
-    return {'success': 'is running'}
-
-# API
+# API --- create
 @app.post('/analyze')
 def analyzer_expr(request: Analyzer, db: Session = Depends(ini_db)):   #type of 'Analyzer' basemodel
     user_expr = expression_parser(request.expression)
@@ -79,8 +75,38 @@ def analyzer_expr(request: Analyzer, db: Session = Depends(ini_db)):   #type of 
     )
 
     db.add(row)
-    db.commit()
+    db.commit() #important after each op
     db.refresh(row)
 
 
     return info #front-end needs data
+
+
+#read --- all
+@app.get('/history')
+def create(db: Session = Depends(ini_db)):
+    rows = db.query(Expression).order_by(Expression.created_at.desc()).all()
+    return rows
+
+#read --- one
+@app.get('/history/{expr_id}')
+def create_one(expr_id, db: Session = Depends(ini_db)):
+    row = db.query(Expression).filter(Expression.id == expr_id).first()
+    
+    if row is None:
+        return {'error': 'Expression not found'}
+    
+    return row
+
+#delete
+@app.delete('/history/{expr_id}')
+def delete(expr_id, db: Session = Depends(ini_db)):
+    row = db.query(Expression).filter(Expression.id == expr_id).first()
+
+    if row is None:
+        return {'error': 'Expression not found'}
+    
+    db.delete(row)
+    db.commit()
+
+    return {'success':'Expression deleted'}
