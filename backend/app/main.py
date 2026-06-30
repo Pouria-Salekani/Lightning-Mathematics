@@ -52,7 +52,7 @@ def expression_parser(expr):
 @app.post('/analyze')
 def analyzer_expr(request: Analyzer, db: Session = Depends(ini_db)):   #type of 'Analyzer' basemodel
     user_expr = expression_parser(request.expression)
-    print(user_expr)
+    print(user_expr, type(user_expr))
     if type(user_expr) == list:
         symbol = config.T
     else:
@@ -97,6 +97,21 @@ def create_one(expr_id, db: Session = Depends(ini_db)):
         return {'error': 'Expression not found'}
     
     return row
+
+#read --- query
+@app.get('/history/search/{query}')
+def search(query, db: Session = Depends(ini_db)):
+    rows = (
+        db.query(Expression)
+        .filter(Expression.expression.contains(query))
+        .order_by(Expression.created_at.desc())
+        .all()
+    )
+
+    if not rows:
+        return {'error': 'Expression does not exist, please try again'}
+
+    return rows
 
 #delete
 @app.delete('/history/{expr_id}')
