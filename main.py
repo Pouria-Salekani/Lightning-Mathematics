@@ -3,7 +3,7 @@ import colors
 import modes
 import config
 import rendering_math as render
-
+from api_to_backend import get_history, delete_expr
 
 
 
@@ -66,8 +66,14 @@ def main():
                 elif event.key == pygame.K_SLASH and (event.mod & pygame.KMOD_SHIFT):
                     text_box = ''
                     state = 'instructions'
+                
                 elif event.key == pygame.K_COMMA and (event.mod & pygame.KMOD_SHIFT):
                     text_box += 'exp(sin(theta)) - 2*cos(4*theta) + sin((2*theta-pi)/24)**5'
+                    print([i for i in get_history()])
+                
+                elif event.key == pygame.K_l:
+                    print(delete_expr(6))
+                
                 else:   #writing
                     text_box += event.unicode
 
