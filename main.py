@@ -33,6 +33,8 @@ def main():
     lightning_frame = 0
     branches = []
 
+    del_id_idx = 0
+    highlight_cooldown = 0
 
     while run:
         window.fill((0,0,0))
@@ -44,6 +46,8 @@ def main():
                 run = False
             
             if state == 'user' and event.type == pygame.KEYDOWN:
+                 #TODO: ADD HOLD BACKSPACE DELETE!!!!!!!!!!
+                
                 if event.key == pygame.K_BACKSPACE: #delete by 1
                     text_box = text_box[:-1]
                 elif event.key == pygame.K_RETURN:
@@ -66,10 +70,13 @@ def main():
                 elif event.key == pygame.K_SLASH and (event.mod & pygame.KMOD_SHIFT):
                     text_box = ''
                     state = 'instructions'
-                
+                elif event.key == pygame.K_3 and (event.mod & pygame.KMOD_SHIFT):
+                    state = 'history'
+                    history = get_history()
+                    #go to history page
+
                 elif event.key == pygame.K_COMMA and (event.mod & pygame.KMOD_SHIFT):
                     text_box += 'exp(sin(theta)) - 2*cos(4*theta) + sin((2*theta-pi)/24)**5'
-                    print([i for i in get_history()])
                 
                 elif event.key == pygame.K_l:
                     print(delete_expr(6))
@@ -103,6 +110,7 @@ def main():
                 text = ['To view instructions, press "?"',
                         'To change the colors, press "Z"',
                         'To make lines thicker, press UP ARROW. To make them thinner, DOWN ARROW', 
+                        'To view expression history, press "#"',
                         'To take a screenshot, press "SHIFT + S" when the graph appears',
                         'Press "<" then ENTER for a cool graph!']
                 screenshot_font = pygame.font.SysFont(None, 33)
@@ -131,6 +139,53 @@ def main():
                 surface = font.render(f'{key}: {value}', True, colors.WHITE)
                 window.blit(surface, (((config.WIDTH - surface.get_width()) // 2), y))
                 y += 60
+
+        #TODO: click on expression to go to encyc page and view it!
+        elif state == 'history':
+            font = pygame.font.SysFont(None, 30)
+            h_font = pygame.font.SysFont(None, 28)
+
+            #cooldown so the grey box doesnt go crazy
+            if highlight_cooldown > 0:
+                highlight_cooldown -= 1
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    state = 'user'
+                #THE MORE TEXT, the less the number of highlight_cd has to be
+                elif event.key == pygame.K_UP and highlight_cooldown == 0: 
+                    del_id_idx = max(0, del_id_idx - 1)
+                    highlight_cooldown = 15
+                elif event.key == pygame.K_DOWN and highlight_cooldown == 0:
+                    del_id_idx = min(len(history) - 1, del_id_idx + 1)
+                    highlight_cooldown = 15
+
+
+            text = ['Press UP arrow to go up',
+                    'Press DOWN arrow to go down',
+                    'Press "D" to delete the hightlighted expression',
+                    'Press "S" for ______'
+            ]
+            y = 25
+            for i in text:
+                left_surface = h_font.render(i, True, colors.WHITE)
+                window.blit(left_surface, (20,y))
+                y += 30
+            
+
+            start_y = 300
+            for i, item in enumerate(history):
+                y = start_y + i * 40
+                #print(i['expression'][0])
+                if i == del_id_idx:
+                    pygame.draw.rect(window, (60, 60, 60), (0, y, config.WIDTH, 30))
+
+                surface = font.render(item['expression'], True, colors.WHITE)
+                window.blit(surface, (((config.WIDTH - surface.get_width()) // 2), y+5))
+                y += 60
+
+            
+            
 
 
         elif state == 'instructions':

@@ -8,6 +8,7 @@ from app.models import Expression
 from sqlalchemy.orm import Session
 from app import config
 from app import models #automatically loads the class
+from app.text_formatter import remove_brackets
 
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
@@ -66,7 +67,8 @@ def analyzer_expr(request: Analyzer, db: Session = Depends(ini_db)):   #type of 
 
 
     row = Expression(
-        expression=str(info.get('Input')),
+        expression=str(remove_brackets(info.get('Input')) 
+                       if '[' in info.get('Input') else info.get('Input')),
         expression_type=str(info.get('Type')),
         derivatives=derivative,
         roots=str(info.get('Roots', info.get('Roots (approximated)', ''))),

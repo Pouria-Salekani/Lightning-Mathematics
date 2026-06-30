@@ -75,5 +75,7 @@ def expression_analyzer(symbol, expr, user_input, bundle):
             'Range (approximated)': range
             }
     INFO = {k: str(v) for k, v in INFO.items()}
+    if '[' in INFO['Input']:
+        INFO['Input'] = text_formatter.remove_brackets(INFO['Input']) 
     return INFO
 

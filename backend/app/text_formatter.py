@@ -49,4 +49,7 @@ def make_pretty_text(f):   #(symbol, (sympfy1, sympfy2)) for parametric, check i
     
     except NotImplementedError:
         return 'Undefined'
-    
+
+
+def remove_brackets(s):
+    return s[1:-1].replace("'",'')
