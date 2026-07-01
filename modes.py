@@ -1,7 +1,5 @@
 from sympy import lambdify, sympify, symbols, pi
-from math import sin, cos
 import rendering_math as render
-import encyclopedia as encyclopedia
 from api_to_backend import api_expression_analyzer
 
 x = symbols('x')
