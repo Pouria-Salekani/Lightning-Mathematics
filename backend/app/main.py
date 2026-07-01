@@ -61,7 +61,7 @@ def analyzer_expr(request: Analyzer, db: Session = Depends(ini_db)):   #type of 
     
     info = expression_analyzer(symbol, user_expr, request.expression, request.bundle)
     
-    derivative = info.get('info', None) #incase if parametric
+    derivative = info.get('Derivative', None) #incase if parametric
     if derivative is None:
         derivative = f"Left: {info.get('Left Derivative')}, Right: {info.get('Right Derivative')}"
 

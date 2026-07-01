@@ -4,6 +4,7 @@ import modes
 import config
 import rendering_math as render
 import api_to_backend
+import encyc_pretty
 
 
 
@@ -73,15 +74,12 @@ def main():
                     state = 'instructions'
                 elif event.key == pygame.K_3 and (event.mod & pygame.KMOD_SHIFT):
                     state = 'history'
-                    history = api_to_backend.get_history()
-                    #go to history page
+                    history = api_to_backend.get_history() #fetch history page
+                    
 
                 elif event.key == pygame.K_COMMA and (event.mod & pygame.KMOD_SHIFT):
                     text_box += 'exp(sin(theta)) - 2*cos(4*theta) + sin((2*theta-pi)/24)**5'
-                
-                # elif event.key == pygame.K_l:
-                #     print(delete_expr(6))
-                
+             
                 else:   #writing
                     text_box += event.unicode
 
@@ -94,22 +92,25 @@ def main():
                 elif event.key == pygame.K_z:
                     color_counter = (color_counter+1) % len(colors.COLORS)  #loops back
                 elif event.key == pygame.K_4 and (event.mod & pygame.KMOD_SHIFT):
-                    state = 'encyclopedia'
-                    #go to encyclopedia page
+                    state = 'encyclopedia'  #go to encyclopedia page
+                   
             
             elif state == 'history' and event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_d:
-                    print(history[del_id_idx])
-                    #api_to_backend.delete_expr(history[del_id_idx]['id'])
-                    history = api_to_backend.get_history()  #refreshes page
-                if event.key == pygame.K_e:
-                    state = 'encyclopedia' #--->NEED A SPECIAL ONE JUST FOR
-                                            #history --> encyc
-                                        
-        
-                
+                    if history:
+                    # print(history[del_id_idx])
+                    # print('INDEX ', del_id_idx)
+                        api_to_backend.delete_expr(history[del_id_idx]['id'])
+                        history = api_to_backend.get_history()  #refreshes page
+                elif event.key == pygame.K_e:
+                    if history:
+                        state = 'his_to_encyc' 
+                elif event.key == pygame.K_ESCAPE:
+                    state = 'user'
 
-
+            elif state == 'his_to_encyc' and event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    state = 'history'
         
         if state == 'user':
                 font = pygame.font.SysFont(None, 50)
@@ -139,6 +140,7 @@ def main():
                     window.blit(instruction, (((config.WIDTH - instruction.get_width()) // 2), 250)) #center below textbox
 
 
+
         elif state == 'encyclopedia':
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 state = 'draw'
@@ -152,7 +154,6 @@ def main():
                 window.blit(surface, (((config.WIDTH - surface.get_width()) // 2), y))
                 y += 60
 
-        #TODO: click on expression to go to encyc page and view it!
         elif state == 'history':
             font = pygame.font.SysFont(None, 30)
             h_font = pygame.font.SysFont(None, 28)
@@ -162,10 +163,8 @@ def main():
                 highlight_cooldown -= 1
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    state = 'user'
                 #THE MORE TEXT, the less the number of highlight_cd has to be
-                elif event.key == pygame.K_UP and highlight_cooldown == 0: 
+                if event.key == pygame.K_UP and highlight_cooldown == 0: 
                     del_id_idx = max(0, del_id_idx - 1)
                     highlight_cooldown = 19
                 elif event.key == pygame.K_DOWN and highlight_cooldown == 0:
@@ -193,6 +192,20 @@ def main():
 
                 surface = font.render(item['expression'], True, colors.WHITE)
                 window.blit(surface, (((config.WIDTH - surface.get_width()) // 2), y+5))
+                y += 60
+
+        
+        elif state == 'his_to_encyc':
+            new_info = encyc_pretty.rearrange_info(history[del_id_idx])
+
+            font = pygame.font.SysFont(None, 35)
+        
+            y = 300
+            for key, value in new_info.items():
+                if key == 'Input' and len(value) == 2:
+                    value = ', '.join(value)
+                surface = font.render(f'{key}: {value}', True, colors.WHITE)
+                window.blit(surface, (((config.WIDTH - surface.get_width()) // 2), y))
                 y += 60
 
 
