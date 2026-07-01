@@ -3,12 +3,15 @@ import colors
 import modes
 import config
 import rendering_math as render
-from api_to_backend import get_history, delete_expr
+import api_to_backend
 
 
 
 def main():
     pygame.init()
+    pygame.key.set_repeat(500, 50)  #for backspace and type hold, 
+                                    #the left is how fast itll go
+
     window = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
     pygame.display.set_caption('Lightning Mathematics!')
 
@@ -45,9 +48,7 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
             
-            if state == 'user' and event.type == pygame.KEYDOWN:
-                 #TODO: ADD HOLD BACKSPACE DELETE!!!!!!!!!!
-                
+            if state == 'user' and event.type == pygame.KEYDOWN:                
                 if event.key == pygame.K_BACKSPACE: #delete by 1
                     text_box = text_box[:-1]
                 elif event.key == pygame.K_RETURN:
@@ -72,14 +73,14 @@ def main():
                     state = 'instructions'
                 elif event.key == pygame.K_3 and (event.mod & pygame.KMOD_SHIFT):
                     state = 'history'
-                    history = get_history()
+                    history = api_to_backend.get_history()
                     #go to history page
 
                 elif event.key == pygame.K_COMMA and (event.mod & pygame.KMOD_SHIFT):
                     text_box += 'exp(sin(theta)) - 2*cos(4*theta) + sin((2*theta-pi)/24)**5'
                 
-                elif event.key == pygame.K_l:
-                    print(delete_expr(6))
+                # elif event.key == pygame.K_l:
+                #     print(delete_expr(6))
                 
                 else:   #writing
                     text_box += event.unicode
@@ -95,6 +96,17 @@ def main():
                 elif event.key == pygame.K_4 and (event.mod & pygame.KMOD_SHIFT):
                     state = 'encyclopedia'
                     #go to encyclopedia page
+            
+            elif state == 'history' and event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_d:
+                    print(history[del_id_idx])
+                    #api_to_backend.delete_expr(history[del_id_idx]['id'])
+                    history = api_to_backend.get_history()  #refreshes page
+                if event.key == pygame.K_e:
+                    state = 'encyclopedia' #--->NEED A SPECIAL ONE JUST FOR
+                                            #history --> encyc
+                                        
+        
                 
 
 
@@ -155,15 +167,15 @@ def main():
                 #THE MORE TEXT, the less the number of highlight_cd has to be
                 elif event.key == pygame.K_UP and highlight_cooldown == 0: 
                     del_id_idx = max(0, del_id_idx - 1)
-                    highlight_cooldown = 15
+                    highlight_cooldown = 19
                 elif event.key == pygame.K_DOWN and highlight_cooldown == 0:
                     del_id_idx = min(len(history) - 1, del_id_idx + 1)
-                    highlight_cooldown = 15
-
-
+                    highlight_cooldown = 19
+        
             text = ['Press UP arrow to go up',
                     'Press DOWN arrow to go down',
                     'Press "D" to delete the hightlighted expression',
+                    'Press "E" to go to the expression`s encyclopedia page',
                     'Press "S" for ______'
             ]
             y = 25
@@ -176,7 +188,6 @@ def main():
             start_y = 300
             for i, item in enumerate(history):
                 y = start_y + i * 40
-                #print(i['expression'][0])
                 if i == del_id_idx:
                     pygame.draw.rect(window, (60, 60, 60), (0, y, config.WIDTH, 30))
 
@@ -184,8 +195,6 @@ def main():
                 window.blit(surface, (((config.WIDTH - surface.get_width()) // 2), y+5))
                 y += 60
 
-            
-            
 
 
         elif state == 'instructions':
